@@ -1,0 +1,19 @@
+{
+  "name": "konsensus-app-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dcsil/konsensus-app-backend.git"
+  },
+  "author": "Konsensus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dcsil/konsensus-app-backend/issues"
+  },
+  "homepage": "https://github.com/dcsil/konsensus-app-backend#readme"
+}
