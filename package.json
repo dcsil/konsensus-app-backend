@@ -1,29 +1,29 @@
 {
-  "name": "konsensus-app-backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dcsil/konsensus-app-backend.git"
-  },
-  "author": "Konsensus",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dcsil/konsensus-app-backend/issues"
-  },
-  "homepage": "https://github.com/dcsil/konsensus-app-backend#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.2",
-    "cors": "^2.8.5",
-    "express": "^4.17.3",
-    "jsonwebtoken": "^8.5.1",
-    "pg": "^8.7.3",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.17.0"
-  }
+    "name": "konsensus-app-backend",
+    "version": "1.0.0",
+    "description": "Node.js + MySQL API for Konsensus, Authentication and Registration",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/dcsil/konsensus-app-backend.git"
+    },
+    "scripts": {
+        "start": "node ./server.js",
+        "start:dev": "nodemon ./server.js"
+    },
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.19.0",
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "express-jwt": "^6.0.0",
+        "joi": "^17.2.0",
+        "jsonwebtoken": "^8.5.1",
+        "mysql2": "^2.1.0",
+        "rootpath": "^0.1.2",
+        "sequelize": "^6.3.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
+    }
 }
