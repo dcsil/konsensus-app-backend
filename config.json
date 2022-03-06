@@ -1,7 +1,7 @@
 ﻿{
     "database": {
         "host": "localhost",
-        "port": 8888,
+        "port": "8888",
         "user": "root",
         "password": "123",
         "database": "konsensus-app-backend"
