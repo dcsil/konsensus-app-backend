@@ -1,6 +1,18 @@
 const request = require('supertest');
 const app = require("../server");
 
+function delay() {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, 2000);
+    });
+  }
+  
+  beforeAll(async () => {
+    await delay();
+  });
+
 describe('Sample test suite', () => {
     it('Sample Test', () => {
         expect(true).toEqual(true);
@@ -12,3 +24,5 @@ describe('Sample test suite', () => {
         expect(response.body.message).toEqual("Hello World!");
     });
 });
+
+afterAll(() => { console.log('Closing the app...'); app.close(); });
