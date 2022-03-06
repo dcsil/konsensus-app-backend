@@ -1,0 +1,17 @@
+tools:
+  exceptions: ""
+  logging: ""
+  ci: ""
+
+services:
+  production: ""
+
+docs:
+  frontend: "https://github.com/dcsil/konsensus-app-frontend"
+  backend: "https://github.com/dcsil/konsensus-app-backend"
+
+commands:
+  bootstrap: ""
+  database: ""
+  server: ""
+  test: ""
