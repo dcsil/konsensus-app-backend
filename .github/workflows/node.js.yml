@@ -13,10 +13,11 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 3
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -29,3 +30,13 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+
+    services:
+        mysql:
+            image: mysql:8.0
+            env:
+                MYSQL_ALLOW_EMPTY_PASSWORD: yes
+                MYSQL_DATABASE: konsensus-app-backend
+            ports:
+                - 3306
+            options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
