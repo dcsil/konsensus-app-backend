@@ -3,8 +3,13 @@
 # script/bootstrap: Resolve all dependencies that the application requires to
 #                   run.
 
+# Exit immediately if a command exits with a non-zero status.
 set -e
 
+# Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install dependencies from Brewfile
 PATH="$PATH:node_modules/.bin"
 
 cd "$(dirname "$0")/.."
@@ -16,5 +21,6 @@ if [ "$(uname -s)" = "Darwin" ]; then
   }
 fi
 
+# Install dependencies from npm
 echo "==> Installing npm dependencies…"
 npm install
