@@ -1,5 +1,5 @@
 const request = require('supertest');
-const app = require("../server");
+const app = require("../src/server");
 
 function delay() {
     return new Promise((resolve, reject) => {
