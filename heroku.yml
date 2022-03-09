@@ -2,4 +2,4 @@ build:
   docker:
     nodejs: Dockerfile
 run:
-  nodejs: bundle exec puma -C config/puma.rb
+  nodejs: npm start
