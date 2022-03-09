@@ -11,9 +11,8 @@ on:
 
 jobs:
   build:
-
-    runs-on: self-hosted
-    timeout-minutes: 3
+    runs-on: self-hosted 
+    timeout-minutes: 10
 
     strategy:
       matrix:
