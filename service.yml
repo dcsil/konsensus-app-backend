@@ -11,7 +11,7 @@ docs:
   backend: "https://github.com/dcsil/konsensus-app-backend"
 
 commands:
-  bootstrap: ""
-  database: ""
-  server: ""
-  test: ""
+  bootstrap: "./script/bootstrap"
+  database: "mysql.server start"    # must first modify .env file with 
+  server: "npm start"
+  test: "jest"

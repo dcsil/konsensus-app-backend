@@ -21,7 +21,7 @@ app.use('/users', require('./users/users.controller'));
 app.use(errorHandler);
 
 // start server
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 4000;
 server = app.listen(port, () => console.log('Server listening on port ' + port));
 
 module.exports = server;
