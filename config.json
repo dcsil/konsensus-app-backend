@@ -1,10 +1,10 @@
 ﻿{
     "database": {
-        "host": "localhost",
+        "host": "us-cdbr-east-05.cleardb.net",
         "port": 3306,
-        "user": "root",
-        "password": "123",
-        "database": "konsensus-app-backend"
+        "user": "bfa858f7f6973a",
+        "password": "ce21f5ff",
+        "database": "heroku_31591c097e2ea39"
     },
     "secret": "konsensus-secret-key"
 }
