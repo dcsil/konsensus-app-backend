@@ -9,14 +9,16 @@ initialize();
 
 async function initialize() {
     
+    const host = process.env.DOCKER ? process.env.MYSQLDB_DOCKER_HOST : process.env.MYSQLDB_LOCAL_HOST;
     // create db if it doesn't already exist
     const config = {
-        host: process.env.MYSQLDB_HOST,
-        port: process.env.MYSQLDB_PORT,
+        host: host,
+        port: process.env.MYSQLDB_LOCAL_PORT,
         user: process.env.MYSQLDB_USER,
-        password: process.env.MYSQLDB_PASSWORD,
+        password: process.env.MYSQLDB_ROOT_PASSWORD,
         database: process.env.MYSQLDB_DATABASE
     }
+    console.log('config :>> ', config);
     // const { host, port, user, password, database } = config.database;
     const connection = await mysql.createConnection(config);
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQLDB_DATABASE}\`;`);
@@ -28,8 +30,8 @@ async function initialize() {
         process.env.MYSQLDB_ROOT_PASSWORD, 
         { 
             dialect: 'mysql', 
-            host: process.env.MYSQLDB_HOST, 
-            port: process.env.MYSQLDB_PORT, 
+            host: host, 
+            port: process.env.MYSQLDB_LOCAL_PORT, 
             logging: false 
         }
     );
