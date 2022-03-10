@@ -35,4 +35,4 @@ workflows:
       - setup
       - node/test:
           test-results-for: jest
-          requires: setup
+          requires: [setup]
