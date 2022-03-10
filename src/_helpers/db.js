@@ -15,7 +15,7 @@ async function initialize() {
         host: host,
         port: process.env.MYSQLDB_PORT,
         user: process.env.MYSQLDB_USER,
-        password: process.env.MYSQLDB_ROOT_PASSWORD,
+        password: process.env.MYSQLDB_PASSWORD,
         database: process.env.MYSQLDB_DATABASE
     }
     console.log('config :>> ', config);
@@ -27,7 +27,7 @@ async function initialize() {
     const sequelize = new Sequelize(
         process.env.MYSQLDB_DATABASE, 
         process.env.MYSQLDB_USER, 
-        process.env.MYSQLDB_ROOT_PASSWORD, 
+        process.env.MYSQLDB_PASSWORD, 
         { 
             dialect: 'mysql', 
             host: host, 
