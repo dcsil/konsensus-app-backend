@@ -1,7 +1,7 @@
 tools:
   exceptions: "https://sentry.io/organizations/dcsil/projects/konsensus-backend/?project=6146406"
   logging: "https://service.us2.sumologic.com/ui/?appName=konsensus-backend&addonId=sumologic#/home"
-  ci: ""
+  ci: "https://app.circleci.com/pipelines/github/dcsil/konsensus-app-backend"
 
 services:
   production: "https://konsensus-backend.herokuapp.com/"
