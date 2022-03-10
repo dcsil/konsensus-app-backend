@@ -26,4 +26,4 @@ workflows:
   test:
     jobs:
       - node/test:
-          test-results-for: npm test
+          test-results-for: jest
