@@ -25,7 +25,7 @@ jobs:
           #install mysql client
       - run: sudo apt-get update
       - run: sudo apt-get install default-mysql-client
-      - run: jest
+      - run: npm run test
       # create databases
       # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
       # - run: mysql.server start
