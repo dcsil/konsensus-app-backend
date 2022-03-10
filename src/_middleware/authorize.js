@@ -1,10 +1,11 @@
 const jwt = require('express-jwt');
-const { secret } = require('../config.json');
 const db = require('../_helpers/db');
+require('dotenv').config();
 
 module.exports = authorize;
 
 function authorize() {
+    const secret = process.env.JWT_SECRET;
     return [
         // authenticate JWT token and attach decoded token to request as req.user
         jwt({ secret, algorithms: ['HS256'] }),

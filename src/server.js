@@ -35,6 +35,7 @@ app.use(Sentry.Handlers.tracingHandler());
 
 // api routes
 app.get('/', (req, res, next) => {
+    console.log('Logging in the home route...');
     res.send({'message': 'Hello World!'});
     next();
 });
