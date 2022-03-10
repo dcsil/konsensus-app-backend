@@ -33,9 +33,6 @@ app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
 
-// The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
-
 // api routes
 app.get('/', (req, res, next) => {
     res.send({'message': 'Hello World!'});
@@ -47,6 +44,9 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 });
 
 app.use('/users', require('./users/users.controller'));
+
+// The error handler must be before any other error middleware and after all controllers
+app.use(Sentry.Handlers.errorHandler());
 
 // global error handler
 app.use(errorHandler);
