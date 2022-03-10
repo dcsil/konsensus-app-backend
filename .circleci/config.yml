@@ -27,7 +27,7 @@ jobs:
       - run: sudo apt-get install default-mysql-client
       # create databases
       # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
-      - run: mysql.server start
+      # - run: mysql.server start
 
 workflows:
   test_backend:
