@@ -4,7 +4,7 @@ orbs: # declare what orbs we are going to use
 version: 2.1 # using 2.1 provides access to orbs and other features
 
 jobs:
-  install-node-example:
+  setup:
     docker:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
@@ -26,13 +26,13 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install default-mysql-client
       # create databases
-      - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
-      
+      # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
+      - run: mysql.server start
+
 workflows:
   test_my_app:
     jobs:
-      - install-node-example
-  test:
-    jobs:
+      - setup
       - node/test:
           test-results-for: jest
+          requires: setup
