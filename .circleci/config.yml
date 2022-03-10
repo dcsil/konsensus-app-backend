@@ -1,0 +1,29 @@
+orbs: # declare what orbs we are going to use
+  node: circleci/node@5.0.0 # the node orb provides common node-related configuration
+
+version: 2.1 # using 2.1 provides access to orbs and other features
+
+jobs:
+  install-node-example:
+    docker:
+      - image: 'cimg/base:stable'
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: 123
+          MYSQL_DATABASE: konsensus-app-backend
+
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: true
+          node-version: '16.14'
+      - run: node --version
+      
+workflows:
+  test_my_app:
+    jobs:
+      - install-node-example
+  test:
+    jobs:
+      - node/test:
+          test-results-for: npm test
