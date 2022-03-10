@@ -22,6 +22,8 @@ jobs:
           name: Wait for Database Connection
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          #install mysql client
+      - run: sudo apt-get installdefault-mysql-client
       # create databases
       - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
       
