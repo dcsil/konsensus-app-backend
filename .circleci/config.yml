@@ -28,12 +28,15 @@ jobs:
       # create databases
       # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
       - run: mysql.server start
+  test:
+    steps:
+      - checkout
+      - run: jest
 
 workflows:
   version: 2
-  test_backend:
+  run-and-test:
     jobs:
       - setup
-      - node/test:
-          test-results-for: jest
+      - test:
           requires: setup
