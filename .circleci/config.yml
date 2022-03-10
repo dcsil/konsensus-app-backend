@@ -15,7 +15,7 @@ jobs:
     steps:
       - checkout
       - node/install:
-          install-yarn: true
+          install-yarn: false
           node-version: '16.14'
       - run: node --version
       - run:
@@ -23,6 +23,7 @@ jobs:
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
           #install mysql client
+      - run: sudo apt-get update
       - run: sudo apt-get install default-mysql-client
       # create databases
       - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
