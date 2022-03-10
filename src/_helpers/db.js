@@ -9,11 +9,11 @@ initialize();
 
 async function initialize() {
     
-    const host = process.env.DOCKER ? process.env.MYSQLDB_DOCKER_HOST : process.env.MYSQLDB_LOCAL_HOST;
+    const host = process.env.MYSQLDB_HOST;
     // create db if it doesn't already exist
     const config = {
         host: host,
-        port: process.env.MYSQLDB_LOCAL_PORT,
+        port: process.env.MYSQLDB_PORT,
         user: process.env.MYSQLDB_USER,
         password: process.env.MYSQLDB_ROOT_PASSWORD,
         database: process.env.MYSQLDB_DATABASE
@@ -31,7 +31,7 @@ async function initialize() {
         { 
             dialect: 'mysql', 
             host: host, 
-            port: process.env.MYSQLDB_LOCAL_PORT, 
+            port: process.env.MYSQLDB_PORT, 
             logging: false 
         }
     );

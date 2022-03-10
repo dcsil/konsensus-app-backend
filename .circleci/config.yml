@@ -9,9 +9,8 @@ jobs:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
         environment:
-          MYSQL_ROOT_PASSWORD: 123
-          MYSQL_DATABASE: konsensus-app-backend
-
+          MYSQL_ROOT_PASSWORD: $MYSQLDB_ROOT_PASSWORD
+          MYSQL_DATABASE: $MYSQLDB_DATABASE
     steps:
       - checkout
       - node/install:
@@ -22,14 +21,8 @@ jobs:
           name: Wait for Database Connection
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
-          #install mysql client
-      - run: sudo apt-get update
-      - run: sudo apt-get install default-mysql-client
       - run: npm install
       - run: npm test
-      # create databases
-      # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
-      # - run: mysql.server start
 
 workflows:
   test_backend:
