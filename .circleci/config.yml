@@ -1,0 +1,40 @@
+orbs: # declare what orbs we are going to use
+  node: circleci/node@5.0.0 # the node orb provides common node-related configuration
+
+version: 2.1 # using 2.1 provides access to orbs and other features
+
+jobs:
+  setup:
+    docker:
+      - image: 'cimg/base:stable'
+      - image: cimg/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: 123
+          MYSQL_DATABASE: konsensus-app-backend
+
+    steps:
+      - checkout
+      - node/install:
+          install-yarn: false
+          node-version: '16.14'
+      - run: node --version
+      - run:
+          name: Wait for Database Connection
+          # preinstalled in circleci/* docker image
+          command: dockerize -wait tcp://localhost:3306 -timeout 1m
+          #install mysql client
+      - run: sudo apt-get update
+      - run: sudo apt-get install default-mysql-client
+      - run: npm install
+      - run: npm test
+      # create databases
+      # - run: mysql -h 127.0.0.1 -u root -p123 konsensus-app-backend
+      # - run: mysql.server start
+
+workflows:
+  test_backend:
+    jobs:
+      - setup
+      # - node/test:
+      #     test-results-for: jest
+      #     requires: [setup]
