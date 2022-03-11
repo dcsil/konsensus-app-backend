@@ -34,9 +34,6 @@ app.use(Sentry.Handlers.requestHandler());
 // TracingHandler creates a trace for every incoming request
 app.use(Sentry.Handlers.tracingHandler());
 
-console.log('process.env.MYSQLDB_DATABASE :>> ', process.env.MYSQLDB_DATABASE);
-console.log('process.env.MYSQLDB_ROOT_PASSWORD :>> ', process.env.MYSQLDB_ROOT_PASSWORD);
-
 // api routes
 app.get('/', (req, res, next) => {
   console.log('Logging in the home route...');
