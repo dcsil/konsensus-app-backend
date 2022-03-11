@@ -24,3 +24,7 @@ fi
 # Install dependencies from npm
 echo "==> Installing npm dependencies…"
 npm install
+
+# Copy env variables if env file does not exist
+echo "==> Updating .env variables"
+cp -r -n .env.example .env
