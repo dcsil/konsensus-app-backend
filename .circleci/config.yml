@@ -8,7 +8,7 @@ jobs:
     parameters:
         mysql_root_password:
           type: string
-          default: '123'
+          default: abc
         mysql_database:
           type: string
           default: konsensus-app-backend
