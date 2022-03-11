@@ -29,7 +29,6 @@ jobs:
           name: Wait for Database Connection
           # preinstalled in circleci/* docker image
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
-      - run: echo "password is << parameters.mysql_root_password >>    database is << parameters.mysql_database >>"
       - run: npm install
       - run: npm test
 
