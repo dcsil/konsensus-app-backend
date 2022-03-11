@@ -5,12 +5,19 @@ version: 2.1 # using 2.1 provides access to orbs and other features
 
 jobs:
   setup:
+    parameters:
+        mysql_root_password:
+          type: string
+          default: 123
+        mysql_database:
+          type: string
+          default: konsensus-app-backend
     docker:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
         environment:
-          MYSQL_ROOT_PASSWORD: 123
-          MYSQL_DATABASE: konsensus-app-backend
+          MYSQL_ROOT_PASSWORD: parameters.mysql_root_password
+          MYSQL_DATABASE: parameters.mysql_database
 
     steps:
       - checkout
