@@ -18,8 +18,8 @@ async function initialize() {
         password: process.env.MYSQLDB_PASSWORD,
         database: process.env.MYSQLDB_DATABASE
     }
-    console.log('config :>> ', config);
-    // const { host, port, user, password, database } = config.database;
+    console.log('database config :>> ', config);
+
     const connection = await mysql.createConnection(config);
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${process.env.MYSQLDB_DATABASE}\`;`);
 
