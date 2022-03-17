@@ -50,8 +50,10 @@ app.get('/debug-sentry', function mainHandler(req, res) {
 
 app.use('/users', require('./users/users.controller'));
 
+app.use('/files', require('./files/files.controller'));
+
 // The error handler must be before any other error middleware and after all controllers
-app.use(Sentry.Handlers.errorHandler());
+// app.use(Sentry.Handlers.errorHandler());
 
 // global error handler
 app.use(errorHandler);
