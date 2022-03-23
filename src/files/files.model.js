@@ -4,8 +4,8 @@ module.exports = model;
 
 function model(sequelize) {
     const attributes = {
-        firstName: { type: DataTypes.STRING, allowNull: false },
-        lastName: { type: DataTypes.STRING, allowNull: false },
+        name: { type: DataTypes.STRING, allowNull: false },
+        type: { type: DataTypes.STRING, allowNull: true },
         email: { type: DataTypes.STRING, allowNull: false },
         hash: { type: DataTypes.STRING, allowNull: false }
     };
@@ -21,5 +21,5 @@ function model(sequelize) {
         }
     };
 
-    return sequelize.define('User', attributes, options);
+    return sequelize.define('File', attributes, options);
 }
