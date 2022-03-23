@@ -18,7 +18,7 @@ module.exports = router;
 
 function authenticateSchema(req, res, next) {
     const schema = Joi.object({
-        username: Joi.string().required(),
+        email: Joi.string().required(),
         password: Joi.string().required()
     });
     validateRequest(req, next, schema);
@@ -34,7 +34,7 @@ function registerSchema(req, res, next) {
     const schema = Joi.object({
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
-        username: Joi.string().required(),
+        email: Joi.string().required(),
         password: Joi.string().min(6).required()
     });
     validateRequest(req, next, schema);
@@ -66,7 +66,7 @@ function updateSchema(req, res, next) {
     const schema = Joi.object({
         firstName: Joi.string().empty(''),
         lastName: Joi.string().empty(''),
-        username: Joi.string().empty(''),
+        email: Joi.string().empty(''),
         password: Joi.string().min(6).empty('')
     });
     validateRequest(req, next, schema);

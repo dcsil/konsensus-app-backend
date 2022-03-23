@@ -13,7 +13,7 @@ We support these user endpoints.
 - The following body is required
 ```
 {
-    username: string,
+    email: string,
     password: string
  }
 ```
@@ -30,6 +30,7 @@ We support these user endpoints.
 {
     firstName: string,
     lastName: string,
+    email: string,
     password: string
  }
 ```

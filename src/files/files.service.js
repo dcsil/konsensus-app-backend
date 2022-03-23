@@ -1,8 +1,5 @@
 require('dotenv').config();
 const AWS = require('aws-sdk');
-const fs = require('fs');
-// const fileType = require('file-type');
-const multiparty = require('multiparty');
 
 module.exports = {
     upload
@@ -14,6 +11,8 @@ AWS.config.update({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
+console.log('AWS.config :>> ', AWS.config);
+console.log('process.env.AWS_SECRET_ACCESS_KEY :>> ', process.env.AWS_SECRET_ACCESS_KEY);
 const s3 = new AWS.S3();
 
 async function upload(buffer, name, type) {
