@@ -3,11 +3,17 @@
 ## Users
 We support these user endpoints.
 
-`POST /users/authenticate`
+`POST /user/authenticate`
 - Authenticates a user and returns
 ```
 {
-
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    createdAt: string,
+    updatedAt: string,
+    token: string
 }
 ```
 - The following body is required
@@ -18,7 +24,7 @@ We support these user endpoints.
  }
 ```
 
-`POST /users/register`  
+`POST /user/register`  
 - Registers the user and returns:
 ```
 {
@@ -35,12 +41,12 @@ We support these user endpoints.
  }
 ```
 
-**All the routes below require authorization with a JWT token in the _.**
+**All the routes below require authorization with a JWT Bearer Token.**
 
-`GET /users`
-- Gets all the users in the database.
+`GET /user`
+- Gets all the user in the database.
 
-`GET /users/current`
+`GET /user/current`
 - Gets the current user's user model:
 ```
 {
@@ -48,10 +54,10 @@ We support these user endpoints.
 }
 ```
 
-`GET /users/:id`
+`GET /user/:id`
 - Gets a user model by user id:
 
-`PUT /users/:id`
+`PUT /user/:id`
 - Updates the user model with the given user id and returns the user's model.
 - The following body is required:
 ```
@@ -62,7 +68,7 @@ We support these user endpoints.
 }
 ```
 
-`DELETE /users/:id`
+`DELETE /user/:id`
 - Deletes the user with the given user id and returns
 ```
 { 
@@ -73,7 +79,7 @@ We support these user endpoints.
 ## Organizations
 We support these organization endpoints. All the routes require authorization with a JWT token in the _.
 
-`POST /organizations`
+`POST /organization`
 - Creates a new organization
 - The following body is required:
 ```
@@ -85,7 +91,7 @@ We support these organization endpoints. All the routes require authorization wi
 ## Files
 We support these organization endpoints. All the routes require authorization with a JWT token in the _.
 
-`POST /files
+`POST /file
 - Uploads a new file to S3`
 - The following body is required:
 ```
@@ -94,7 +100,7 @@ We support these organization endpoints. All the routes require authorization wi
 }
 ```
 
-`GET /files`
+`GET /file`
 - Gets the files pertaining to a user:
 ```
 {
