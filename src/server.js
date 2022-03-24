@@ -48,9 +48,9 @@ app.get('/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
 });
 
-app.use('/users', require('./users/users.controller'));
+app.use('/user', require('./user/user.controller'));
 
-app.use('/files', require('./files/files.controller'));
+app.use('/file', require('./file/file.controller'));
 
 // The error handler must be before any other error middleware and after all controllers
 // app.use(Sentry.Handlers.errorHandler());
