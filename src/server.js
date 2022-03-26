@@ -8,9 +8,19 @@ const errorHandler = require('./_middleware/error-handler');
 
 const app = express();
 
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'https://konsensus-client.herokuapp.com/',
+  ],
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+};
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 
 Sentry.init({
   dsn:
