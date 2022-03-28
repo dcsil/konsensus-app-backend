@@ -46,7 +46,8 @@
         "moduleDirectories": [
             "node_modules"
         ],
-        "verbose": true
+        "verbose": true,
+        "coverageReporters": ["clover", "json", "lcov", ["text", {"skipFull": true}]]
     },
     "nyc": {
         "reporter": [

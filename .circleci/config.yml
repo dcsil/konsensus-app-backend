@@ -47,6 +47,7 @@ jobs:
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
           prefix: tests
+    
 workflows:
   test_backend:
     jobs:
