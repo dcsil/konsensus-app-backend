@@ -42,7 +42,7 @@ jobs:
       - run:
           name: Run tests
           command: |
-            ./cc-test-reporter after-build -t lcov
+            ./cc-test-reporter after-build --debug -t lcov --exit-code $?
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
