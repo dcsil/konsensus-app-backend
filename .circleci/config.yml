@@ -18,7 +18,8 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
-          CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
+    environment:
+      CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
 
     steps:
       - checkout
@@ -39,14 +40,13 @@ jobs:
               curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
               chmod +x ./cc-test-reporter
               ./cc-test-reporter before-build
-          when: always
       - run:
-          name: Send coverage report to Code Climate
-          command:
-              # nyc report requires that nyc has already been run,
-              # which creates the .nyc_output folder containing necessary data
-              ./cc-test-reporter after-build -t lcov
-          when: always
+          name: Run tests
+          command: |
+            sudo docker-php-ext-enable xdebug
+            ./cc-test-reporter before-build
+            sudo vendor/bin/phpunit --coverage-clover clover.xml
+            ./cc-test-reporter after-build --coverage-input-type clover --exit-code $?
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
