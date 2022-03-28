@@ -33,11 +33,11 @@ jobs:
           command: dockerize -wait tcp://localhost:3306 -timeout 1m
       - run: npm install
       - run: npm test
-      - run:
-          name: Setup dependencies
-          command: |
-            sudo composer self-update
-            composer install -n --prefer-dist
+      # - run:
+      #     name: Setup dependencies
+      #     command: |
+      #       sudo composer self-update
+      #       composer install -n --prefer-dist
       - run:
           name: Setup Code Climate test-reporter
           command: |
