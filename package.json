@@ -47,5 +47,10 @@
             "node_modules"
         ],
         "verbose": true
+    },
+    "nyc": {
+        "reporter": [
+            "lcov"
+        ]
     }
 }
