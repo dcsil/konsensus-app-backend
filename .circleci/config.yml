@@ -18,8 +18,7 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
-    environment:
-      CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
+          CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
     steps:
       - checkout
       - node/install:
