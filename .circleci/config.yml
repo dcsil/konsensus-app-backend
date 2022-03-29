@@ -18,7 +18,6 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
-          CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
     steps:
       - checkout
       - node/install:
@@ -33,15 +32,15 @@ jobs:
       - run: npm test
       - run:
           name: Setup Code Climate test-reporter
+          environment:
+            CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
           command: |
               # download test reporter as a static binary
               curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
               chmod +x ./cc-test-reporter
-              ./cc-test-reporter before-build --debug
-      - run:
-          name: Run tests
-          command: |
-            ./cc-test-reporter after-build --debug -t lcov --prefix 8.0
+              ./cc-test-reporter before-build
+              ./cc-test-reporter format-coverage -t simplecov
+              ./cc-test-reporter upload-coverage --id $CC_TEST_REPORTER_ID
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
