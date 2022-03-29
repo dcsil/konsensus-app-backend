@@ -37,11 +37,11 @@ jobs:
               # download test reporter as a static binary
               curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
               chmod +x ./cc-test-reporter
-              ./cc-test-reporter before-build
+              ./cc-test-reporter before-build --debug
       - run:
           name: Run tests
           command: |
-            ./cc-test-reporter after-build --debug -t lcov -e
+            ./cc-test-reporter after-build --debug -t lcov --prefix 8.0
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
