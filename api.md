@@ -89,14 +89,14 @@ We support these organization endpoints. All the routes require authorization wi
 ```
 
 ## Files
-We support these organization endpoints. All the routes require authorization with a JWT token in the _.
+We support these organization endpoints. All the routes require authorization with a JWT bearer token.
 
 `POST /file
 - Uploads a new file to S3`
-- The following body is required:
+- You must send FormData with the following fields:  
 ```
 {
-
+    file: File
 }
 ```
 
