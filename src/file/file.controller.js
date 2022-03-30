@@ -9,7 +9,7 @@ const multiparty = require('multiparty');
 const fs = require('fs');
   
 // routes
-router.post('/', authorize(), upload);
+router.post('/upload', authorize(), upload);
 
 module.exports = router;
 

@@ -43,7 +43,7 @@ We support these user endpoints.
 
 **All the routes below require authorization with a JWT Bearer Token.**
 
-`GET /user`
+`GET /user/`
 - Gets all the user in the database.
 
 `GET /user/current`
@@ -79,7 +79,7 @@ We support these user endpoints.
 ## Organizations
 We support these organization endpoints. All the routes require authorization with a JWT token in the _.
 
-`POST /organization`
+`POST /organization/create`
 - Creates a new organization
 - The following body is required:
 ```
@@ -88,10 +88,13 @@ We support these organization endpoints. All the routes require authorization wi
 }
 ```
 
+`GET /organization`
+- Gets all the organizations in the database.
+
 ## Files
 We support these organization endpoints. All the routes require authorization with a JWT bearer token.
 
-`POST /file
+`POST /file/upload`
 - Uploads a new file to S3`
 - You must send FormData with the following fields:  
 ```
