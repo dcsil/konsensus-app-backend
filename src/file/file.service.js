@@ -35,6 +35,7 @@ async function upload(buffer, name, type, userId) {
                 type: type.mime,
                 lastUpdater: userId,
             }
+            console.log('fileModel :>> ', fileModel);
             // save file to DB
             await db.File.create(fileModel);
             return data;
