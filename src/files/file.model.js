@@ -11,7 +11,14 @@ function model(sequelize) {
             primaryKey: true },
         name: { type: DataTypes.STRING, allowNull: false },
         type: { type: DataTypes.STRING, allowNull: true },
-        lastUpdater: { type: DataTypes.UUID, allowNull: false },
+        lastUpdater: { 
+            type: DataTypes.UUID,
+            references: {
+                model: 'Users',
+                key: 'id',
+            },
+            allowNull: false 
+    },
     };
 
     const options = {

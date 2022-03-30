@@ -8,7 +8,7 @@ const userService = require('./user.service');
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
 router.post('/register', registerSchema, register);
-router.get('/', authorize(), getAll);
+router.get('/all', authorize(), getAll);
 router.get('/current', authorize(), getCurrent);
 router.get('/:id', authorize(), getById);
 router.put('/:id', authorize(), updateSchema, update);
@@ -35,7 +35,9 @@ function registerSchema(req, res, next) {
         firstName: Joi.string().required(),
         lastName: Joi.string().required(),
         email: Joi.string().required(),
-        password: Joi.string().min(6).required()
+        password: Joi.string().min(6).required(),
+        role: Joi.string().valid('user', 'admin'),
+        organizationId: Joi.string().required(),
     });
     validateRequest(req, next, schema);
 }

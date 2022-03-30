@@ -4,10 +4,13 @@ const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
 const authorize = require('../_middleware/authorize')
 const organizationService = require('./organization.service');
+// const { Organizations } = require('aws-sdk');
 
 // routes
 router.post('/create', createSchema, create);
-router.get('/', authorize, getAll)
+router.get('/', authorize(), getAll)
+
+module.exports = router;
 
 function createSchema(req, res, next) {
     const schema = Joi.object({
@@ -24,6 +27,6 @@ function create(req, res, next) {
 
 function getAll(req, res, next) {
     organizationService.getAll()
-        .then(users => res.json(users))
+        .then(organizations => res.json(organizations))
         .catch(next);
 }

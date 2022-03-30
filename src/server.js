@@ -20,7 +20,7 @@ const corsOptions = {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 app.options('*', cors()) // include before other routes
 
 Sentry.init({
@@ -47,7 +47,6 @@ app.use(Sentry.Handlers.tracingHandler());
 
 // api routes
 app.get('/', (req, res, next) => {
-  console.log('Logging in the home route...');
   res.send({
     message:
       "Welcome to Konsensus' backend! Windsor is Julian's favourite student!",
@@ -59,9 +58,11 @@ app.get('/debug-sentry', function mainHandler(req, res) {
   throw new Error('My first Sentry error!');
 });
 
-app.use('/user', require('./user/user.controller'));
+app.use('/user', require('./users/user.controller'));
 
-app.use('/file', require('./file/file.controller'));
+app.use('/file', require('./files/file.controller'));
+
+app.use('/organization', require('./organizations/organization.controller'));
 
 // The error handler must be before any other error middleware and after all controllers
 // app.use(Sentry.Handlers.errorHandler());

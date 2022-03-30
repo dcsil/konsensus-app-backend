@@ -10,6 +10,8 @@ const fs = require('fs');
   
 // routes
 router.post('/upload', authorize(), upload);
+router.get('/:id', authorize(), getById);
+router.get('/all', authorize(), getAll);
 
 module.exports = router;
 
@@ -35,7 +37,20 @@ function upload(req, res, next) {
             const data = await filesService.upload(buffer, fileName, type, userId);
             return res.status(200).send(data);
         } catch (err) {
+            console.log('err :>> ', err);
             return res.status(500).send(err);
         }
     });
+}
+
+function getAll(req, res, next) {
+    filesService.getAll()
+        .then(files => res.json(files))
+        .catch(next);
+}
+
+function getById(req, res, next) {
+    filesService.getById(req.params.id)
+        .then(file => res.json(file))
+        .catch(next);
 }

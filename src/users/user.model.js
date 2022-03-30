@@ -12,6 +12,35 @@ function model(sequelize) {
         firstName: { type: DataTypes.STRING, allowNull: false },
         lastName: { type: DataTypes.STRING, allowNull: false },
         email: { type: DataTypes.STRING, allowNull: false },
+        organizationId: { 
+            type: DataTypes.UUID, 
+            references: {
+                model: 'Organizations',
+                key: 'id',
+            },
+            allowNull: false 
+        },
+        role: {
+            type: DataTypes.ENUM('admin', 'member'), 
+            defaultValue: 'member',
+            allowNull: false
+        },
+        image: { type: DataTypes.UUID, allowNull: true },
+        ownedFiles: { 
+            type: DataTypes.JSON,
+            defaultValue: [],
+            allowNull: true 
+        },
+        starredFiles: { 
+            type: DataTypes.JSON,
+            defaultValue: [],
+            allowNull: true 
+        },
+        recentFiles: { 
+            type: DataTypes.JSON,
+            defaultValue: [],
+            allowNull: true 
+        },
         hash: { type: DataTypes.STRING, allowNull: false }
     };
 
