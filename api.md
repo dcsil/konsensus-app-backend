@@ -110,7 +110,7 @@ We support these organization endpoints.
 The below routes require authorization with a JWT token in the _.
 
 `GET /organization`
-- Gets all the organizations in the database.
+- Gets all the organizations in the database (for testing).
 
 ## Files
 We support these organization endpoints. All the routes require authorization with a JWT bearer token.
@@ -136,3 +136,6 @@ We support these organization endpoints. All the routes require authorization wi
     updatedAt: string,
 }
 ```
+
+`GET /file/all`
+- Gets all files in the database (for testing).
