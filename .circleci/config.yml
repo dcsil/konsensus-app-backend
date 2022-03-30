@@ -34,13 +34,17 @@ jobs:
           name: Setup Code Climate test-reporter
           environment:
             CC_TEST_REPORTER_ID: 0341036b044e7159069eeae7dd0eb540468554bac50780f3cf02c5aa14f3dee6
+
           command: |
               # download test reporter as a static binary
               curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
               chmod +x ./cc-test-reporter
               ./cc-test-reporter before-build
-              ./cc-test-reporter format-coverage --debug -t lcov
-              ./cc-test-reporter upload-coverage --id $CC_TEST_REPORTER_ID
+      - run:
+          name: Run tests
+          command: |
+            ./cc-test-reporter format-coverage coverage/lcov.info -t lcov 
+            ./cc-test-reporter upload-coverage -i ./client/coverage/codeclimate.json --id $CC_TEST_REPORTER_ID -d
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
