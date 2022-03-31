@@ -115,6 +115,20 @@ We support these organization endpoints. All the routes require authorization wi
 }
 ```
 
+`PUT /file/star/:id`
+- If the file is currently un-starred, this method will star the file and return:
+```
+{
+    "message": "Successfully starred file."
+}
+```
+- If the file is currently starred, this method will un-star the file and return:
+```
+{
+    "message": "Successfully unstarred file."
+}
+```
+
 `GET /file/:id`
 - Gets a file model by file id:
 ```
@@ -130,3 +144,39 @@ We support these organization endpoints. All the routes require authorization wi
 
 `GET /file/all`
 - Gets all files in the database (for testing).
+
+
+`GET /file/access/:id`
+- Gets a file model, a url to display it (expires in 10 minutes), and the file object from S3.
+- This requires viewing permissions.
+- This method returns
+```
+{
+    id: string,
+    name: string,
+    type?: string,
+    lastUpdater: string,
+    createdAt: string,
+    updatedAt: string,
+    url: string,
+    object: {
+        ContentLength: int,
+        ContentType: string,
+        LastModified: string,
+        Body: {
+            type: string,
+            data: int[]
+        }
+        // some other stuff
+    }
+}
+```
+
+`GET /file/owned`
+- Gets the file models of the user's owned files.
+  
+`GET /file/recent`
+- Gets the file models of the user's recent files.
+
+`GET /file/starred`
+- Gets the file models of the user's starred files.

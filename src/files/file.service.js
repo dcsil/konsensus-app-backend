@@ -2,11 +2,17 @@ require('dotenv').config();
 const AWS = require('aws-sdk');
 const db = require('../_helpers/db');
 const crypto = require('crypto');
+const { Op } = require("sequelize");
 
 module.exports = {
     upload,
     getAll,
-    getById
+    getById,
+    accessById,
+    getOwnedFiles,
+    getStarredFiles,
+    getRecentFiles,
+    star
 };
 
 // configure the keys for accessing AWS
@@ -62,6 +68,32 @@ async function upload(buffer, name, type, userId) {
     }
 };
 
+async function star(user, fileId) {
+    const userId = user.id;
+    const starredFiles = user.starredFiles;
+
+    try {
+        validatePermissions(userId, fileId, 'read');
+
+        if (starredFiles.includes(fileId)) {
+            starredFiles.splice(starredFiles.indexOf(fileId), 1);
+            await db.User.update(
+                { 'starredFiles': starredFiles},
+                { where: { id: userId } });
+            return "Successfully unstarred file."
+        } else {
+            await db.User.update(
+                { 'starredFiles': db.sequelize.fn('json_array_append', db.sequelize.col('starredFiles'), '$', fileId) },
+                { where: { id: userId } });
+            return "Successfully starred file."
+        }
+    }
+    catch (err) {
+        console.log(err);
+        throw Error('Error starring file.');
+    }
+}
+
 async function getAll() {
     return await db.File.findAll();
 }
@@ -70,9 +102,123 @@ async function getById(id) {
     return await getFile(id);
 }
 
+async function accessById(user, id) {
+    try {
+        validatePermissions(user.id, id, 'read');
+
+        const fileModel = await getFile(id);
+        const params = {
+            Bucket: process.env.S3_BUCKET,
+            Key: fileModel.id,
+        };
+
+        const url = await s3.getSignedUrlPromise('getObject',
+            {
+                ...params,
+                Expires: 60 * 10,       // 10 minutes
+            }
+        );
+
+        const object = await s3.getObject(params).promise();
+
+        return {...fileModel.dataValues, url: url, object: object};
+    }
+    catch (err) {
+        console.log(err);
+        return err
+    }
+}
+
+async function getOwnedFiles(user) {
+    const fileIds = user.ownedFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
+}
+
+async function getRecentFiles(user) {
+    const fileIds = user.recentFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
+}
+
+async function getStarredFiles(user) {
+    const fileIds = user.starredFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
+}
+
 // helpers
 async function getFile(id) {
     const file = await db.File.findByPk(id);
-    if (!file) throw 'File not found';
+    if (!file) throw Error('File not found');
     return file;
+}
+
+
+async function validatePermissions(userId, fileId, action) {
+    let permission;
+    switch (action) {
+        case 'read':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                }
+            });
+            break;
+        case 'write':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                    canWrite: true,
+                }
+            });
+            break;
+        case 'share':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                    canWrite: true,
+                    canShare: true,
+                }
+            });
+            break;
+        case 'admin':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    isAdmin: true,
+                }
+            });
+            break;
+        default:
+            throw Error('Invalid action provided.')
+
+    }
+    if (!permission) throw Error('User does not have necessary permissions');
+    return permission;
 }

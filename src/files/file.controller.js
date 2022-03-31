@@ -10,8 +10,14 @@ const fs = require('fs');
   
 // routes
 router.post('/upload', authorize(), upload);
-router.get('/:id', authorize(), getById);
+router.put('/star/:id', authorize(), star);
+
+router.get('/owned', authorize(), getOwnedFiles);
+router.get('/starred', authorize(), getStarredFiles);
+router.get('/recent', authorize(), getRecentFiles);
 router.get('/all', authorize(), getAll);
+router.get('/access/:id', authorize(), accessById);
+router.get('/:id', authorize(), getById);
 
 module.exports = router;
 
@@ -43,6 +49,12 @@ function upload(req, res, next) {
     });
 }
 
+function star(req, res, next) {
+    filesService.star(req.user, req.params.id)
+        .then((message) => res.json({message: message}))
+        .catch(next);
+}
+
 function getAll(req, res, next) {
     filesService.getAll()
         .then(files => res.json(files))
@@ -52,5 +64,29 @@ function getAll(req, res, next) {
 function getById(req, res, next) {
     filesService.getById(req.params.id)
         .then(file => res.json(file))
+        .catch(next);
+}
+
+function accessById(req, res, next) {
+    filesService.accessById(req.user, req.params.id)
+        .then(file => res.json(file))
+        .catch(next);
+}
+
+function getOwnedFiles(req, res, next) {
+    filesService.getOwnedFiles(req.user)
+        .then(files => res.json(files))
+        .catch(next);
+}
+
+function getStarredFiles(req, res, next) {
+    filesService.getStarredFiles(req.user)
+        .then(files => res.json(files))
+        .catch(next);
+}
+
+function getRecentFiles(req, res, next) {
+    filesService.getRecentFiles(req.user)
+        .then(files => res.json(files))
         .catch(next);
 }
