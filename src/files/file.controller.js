@@ -43,7 +43,7 @@ function upload(req, res, next) {
             const data = await filesService.upload(buffer, fileName, type, userId);
             return res.status(200).send(data);
         } catch (err) {
-            console.log('err :>> ', err);
+            console.log(err);
             return res.status(500).send(err);
         }
     });
@@ -56,7 +56,6 @@ function star(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    console.log('req.user :>> ', req.user);
     filesService.getAll(req.user.id)
         .then(files => res.json(files))
         .catch(next);

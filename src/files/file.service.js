@@ -64,7 +64,7 @@ async function upload(buffer, name, type, userId) {
     }
     catch (err) {
         console.log(err);
-        return err;
+        throw err;
     }
 };
 
@@ -146,7 +146,7 @@ async function accessById(user, id) {
     }
     catch (err) {
         console.log(err);
-        return err
+        throw err;
     }
 }
 

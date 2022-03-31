@@ -22,8 +22,6 @@ function updateSchema(req, res, next) {
 }
 
 function createOrUpdate(req, res, next) {
-    console.log('create or update');
-    console.log('req.params :>> ', req.params);
     permissionService.createOrUpdate(req.params.fileId, req.params.userId, req.body, req.user)
         .then((message) => res.json({ message: message }))
         .catch(next);

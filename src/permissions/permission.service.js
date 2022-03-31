@@ -22,7 +22,6 @@ async function createOrUpdate(fileId, userId, updateFields, currentUser) {
             fileId: fileId, 
             userId: userId
         };
-        console.log('params :>> ', params);
 
         if (permission) {
             await permission.update(params);
