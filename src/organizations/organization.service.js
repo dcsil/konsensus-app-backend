@@ -6,7 +6,6 @@ module.exports = {
 };
 
 async function create(params) {
-    // save user
     await db.Organization.create(params);
 }
 

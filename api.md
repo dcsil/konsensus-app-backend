@@ -104,7 +104,7 @@ The below routes require authorization with a JWT token in the _.
 - Gets all the organizations in the database (for testing).
 
 ## Files
-We support these organization endpoints. All the routes require authorization with a JWT bearer token.
+We support these file endpoints. All the routes require authorization with a JWT bearer token.
 
 `POST /file/upload`
 - Uploads a new file to S3`
@@ -143,7 +143,7 @@ We support these organization endpoints. All the routes require authorization wi
 ```
 
 `GET /file/all`
-- Gets all files in the database (for testing).
+- Gets all files that the user can view.
 
 
 `GET /file/access/:id`
@@ -180,3 +180,47 @@ We support these organization endpoints. All the routes require authorization wi
 
 `GET /file/starred`
 - Gets the file models of the user's starred files.
+
+
+## Permissions
+We support these permission endpoints. All the routes require authorization with a JWT bearer token.
+
+`PUT /permission/:fileId/:userId`
+- Creates or updates the permissions for the corresponding file and user.
+- The user making this call must have edit or admin access to the file.
+The following body is required:
+```
+{
+    canView?: boolean,
+    canEdit?: boolean,
+    canShare?: boolean,
+    isAdmin?: boolean,
+}
+```
+If a new permission model is created, returns:
+```
+{
+    message: Permission created.
+}
+```
+If an existing permission is updated, returns:
+```
+{
+    message: Permission updated.
+}
+```
+
+`GET /permission/:fileId/:userId`
+- Gets the permission model for the corresponding file and user:
+```
+{
+    fileId: string,
+    userId: string,
+    canView: boolean,
+    canEdit: boolean,
+    canShare: boolean,
+    isAdmin: boolean,
+    createdAt: string,
+    updatedAt: string
+}
+```

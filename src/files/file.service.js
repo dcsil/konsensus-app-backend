@@ -64,7 +64,7 @@ async function upload(buffer, name, type, userId) {
     }
     catch (err) {
         console.log(err);
-        return err;
+        throw err;
     }
 };
 
@@ -94,8 +94,29 @@ async function star(user, fileId) {
     }
 }
 
-async function getAll() {
-    return await db.File.findAll();
+async function getAll(userId) {
+    try {
+        const permissions = await db.Permission.findAll(
+            {
+                where: {
+                    userId: userId,
+                    canView: true,
+                }
+            }
+        )
+        const fileIds = permissions.map(permission => permission.fileId);
+        return await db.File.findAll({
+            where: {
+                id: {
+                    [Op.in]: fileIds
+                }
+            }
+        });
+    }
+    catch (err) {
+        console.log(err);
+        throw Error('Error getting all files.');
+    }
 }
 
 async function getById(id) {
@@ -125,7 +146,7 @@ async function accessById(user, id) {
     }
     catch (err) {
         console.log(err);
-        return err
+        throw err;
     }
 }
 
