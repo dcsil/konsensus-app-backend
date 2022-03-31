@@ -12,6 +12,9 @@ const fs = require('fs');
 router.post('/upload', authorize(), upload);
 router.get('/:id', authorize(), getById);
 router.get('/all', authorize(), getAll);
+router.get('/access/:id', authorize(), accessById);
+router.get('/owned', authorize(), getOwned);
+
 
 module.exports = router;
 
@@ -51,6 +54,12 @@ function getAll(req, res, next) {
 
 function getById(req, res, next) {
     filesService.getById(req.params.id)
+        .then(file => res.json(file))
+        .catch(next);
+}
+
+function accessById(req, res, next) {
+    filesService.accessById(req.user, req.params.id)
         .then(file => res.json(file))
         .catch(next);
 }

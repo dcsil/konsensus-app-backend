@@ -139,3 +139,30 @@ We support these organization endpoints. All the routes require authorization wi
 
 `GET /file/all`
 - Gets all files in the database (for testing).
+
+
+`GET /file/access/:id`
+- Gets a file model, a url to display it (expires in 10 minutes), and the file object from S3.
+- This requires viewing permissions.
+- This method returns
+```
+{
+    id: string,
+    name: string,
+    type?: string,
+    lastUpdater: string,
+    createdAt: string,
+    updatedAt: string,
+    url: string,
+    object: {
+        ContentLength: int,
+        ContentType: string,
+        LastModified: string,
+        Body: {
+            type: string,
+            data: int[]
+        }
+        // some other stuff
+    }
+}
+```

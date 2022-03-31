@@ -6,7 +6,8 @@ const crypto = require('crypto');
 module.exports = {
     upload,
     getAll,
-    getById
+    getById,
+    accessById
 };
 
 // configure the keys for accessing AWS
@@ -70,9 +71,87 @@ async function getById(id) {
     return await getFile(id);
 }
 
+async function accessById(user, id) {
+    try {
+        validatePermissions(user.id, id, 'read');
+
+        const fileModel = await getFile(id);
+        const params = {
+            Bucket: process.env.S3_BUCKET,
+            Key: fileModel.id,
+        };
+
+        const url = await s3.getSignedUrlPromise('getObject',
+            {
+                ...params,
+                Expires: 60 * 10,       // 10 minutes
+            }
+        );
+
+        const object = await s3.getObject(params).promise();
+
+        return {...fileModel.dataValues, url: url, object: object};
+    }
+    catch (err) {
+        console.log(err);
+        return err
+    }
+}
+
 // helpers
 async function getFile(id) {
     const file = await db.File.findByPk(id);
-    if (!file) throw 'File not found';
+    if (!file) throw Error('File not found');
     return file;
+}
+
+
+async function validatePermissions(userId, fileId, action) {
+    let permission;
+    switch (action) {
+        case 'read':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                }
+            });
+            break;
+        case 'write':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                    canWrite: true,
+                }
+            });
+            break;
+        case 'share':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    canView: true,
+                    canWrite: true,
+                    canShare: true,
+                }
+            });
+            break;
+        case 'admin':
+            permission = await db.Permission.findOne({
+                where: {
+                    userId: userId,
+                    fileId: fileId,
+                    isAdmin: true,
+                }
+            });
+            break;
+        default:
+            throw Error('Invalid action provided.')
+
+    }
+    if (!permission) throw Error('User does not have necessary permissions');
+    return permission;
 }
