@@ -56,7 +56,8 @@ function star(req, res, next) {
 }
 
 function getAll(req, res, next) {
-    filesService.getAll()
+    console.log('req.user :>> ', req.user);
+    filesService.getAll(req.user.id)
         .then(files => res.json(files))
         .catch(next);
 }
