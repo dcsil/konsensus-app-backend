@@ -20,7 +20,8 @@ async function authenticate({ email, password }) {
 
     // authentication successful
     const token = jwt.sign({ sub: user.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return { ...omitHash(user.get()), token };
+    fullUserModel = await getUser(user.id);
+    return { ...fullUserModel, token };
 }
 
 async function getAll() {
@@ -77,7 +78,8 @@ async function _delete(id) {
 async function getUser(id) {
     const user = await db.User.findByPk(id);
     if (!user) throw 'User not found';
-    return user;
+    const org = await db.Organization.findByPk(user.organizationId);
+    return { ...omitHash(user.get()), organization: org.get() };
 }
 
 function omitHash(user) {
