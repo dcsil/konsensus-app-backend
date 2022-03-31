@@ -4,24 +4,8 @@
 We support these user endpoints.
 
 `POST /user/authenticate`
-- Authenticates a user and returns the user model with a JWT:
-```
-{
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    organizationId: string,
-    role: string,
-    image?: string,
-    ownedFiles: string[],
-    starredFiles: string[],
-    recentFiles: string[],
-    createdAt: string,
-    updatedAt: string,
-    token: string
-}
-```
+- Authenticates a user and returns the user model with a JWT and organization info.
+- 
 - The following body is required
 ```
 {
@@ -55,7 +39,7 @@ We support these user endpoints.
 - Gets all the user in the database.
 
 `GET /user/current`
-- Gets the current user's user model:
+- Gets the current user's user model and organization info:
 ```
 {
     id: string,
@@ -70,6 +54,13 @@ We support these user endpoints.
     recentFiles: string[],
     createdAt: string,
     updatedAt: string,
+    organization: {
+        id: string,
+        name: string,
+        image: string,
+        createdAt: string,
+        updatedAt: string
+    },
 }
 ```
 
