@@ -2,12 +2,17 @@ require('dotenv').config();
 const AWS = require('aws-sdk');
 const db = require('../_helpers/db');
 const crypto = require('crypto');
+const { Op } = require("sequelize");
 
 module.exports = {
     upload,
     getAll,
     getById,
-    accessById
+    accessById,
+    getOwnedFiles,
+    getStarredFiles,
+    getRecentFiles,
+    star
 };
 
 // configure the keys for accessing AWS
@@ -63,6 +68,32 @@ async function upload(buffer, name, type, userId) {
     }
 };
 
+async function star(user, fileId) {
+    const userId = user.id;
+    const starredFiles = user.starredFiles;
+
+    try {
+        validatePermissions(userId, fileId, 'read');
+
+        if (starredFiles.includes(fileId)) {
+            starredFiles.splice(starredFiles.indexOf(fileId), 1);
+            await db.User.update(
+                { 'starredFiles': starredFiles},
+                { where: { id: userId } });
+            return "Successfully unstarred file."
+        } else {
+            await db.User.update(
+                { 'starredFiles': db.sequelize.fn('json_array_append', db.sequelize.col('starredFiles'), '$', fileId) },
+                { where: { id: userId } });
+            return "Successfully starred file."
+        }
+    }
+    catch (err) {
+        console.log(err);
+        throw Error('Error starring file.');
+    }
+}
+
 async function getAll() {
     return await db.File.findAll();
 }
@@ -96,6 +127,42 @@ async function accessById(user, id) {
         console.log(err);
         return err
     }
+}
+
+async function getOwnedFiles(user) {
+    const fileIds = user.ownedFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
+}
+
+async function getRecentFiles(user) {
+    const fileIds = user.recentFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
+}
+
+async function getStarredFiles(user) {
+    const fileIds = user.starredFiles;
+    const files = await db.File.findAll({
+        where: {
+            id: {
+                [Op.in]: fileIds
+            }
+        }
+    });
+    return files;
 }
 
 // helpers

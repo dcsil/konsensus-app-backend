@@ -124,6 +124,20 @@ We support these organization endpoints. All the routes require authorization wi
 }
 ```
 
+`PUT /file/star/:id`
+- If the file is currently un-starred, this method will star the file and return:
+```
+{
+    "message": "Successfully starred file."
+}
+```
+- If the file is currently starred, this method will un-star the file and return:
+```
+{
+    "message": "Successfully unstarred file."
+}
+```
+
 `GET /file/:id`
 - Gets a file model by file id:
 ```
@@ -166,3 +180,12 @@ We support these organization endpoints. All the routes require authorization wi
     }
 }
 ```
+
+`GET /file/owned`
+- Gets the file models of the user's owned files.
+  
+`GET /file/recent`
+- Gets the file models of the user's recent files.
+
+`GET /file/starred`
+- Gets the file models of the user's starred files.
