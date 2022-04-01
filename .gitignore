@@ -2,3 +2,4 @@
 .vscode/
 Brewfile.lock.json
 .env
+/.nyc_output
