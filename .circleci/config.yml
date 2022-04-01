@@ -44,7 +44,7 @@ jobs:
           name: Run tests
           command: |
             ./cc-test-reporter format-coverage coverage/lcov.info -t lcov 
-            ./cc-test-reporter upload-coverage -i ./client/coverage/codeclimate.json --id $CC_TEST_REPORTER_ID -d
+            ./cc-test-reporter upload-coverage -i ./coverage/codeclimate.json --id $CC_TEST_REPORTER_ID -d
       # Upload results
       - store_artifacts: # upload test coverage as artifact
           path: ./coverage/lcov.info
