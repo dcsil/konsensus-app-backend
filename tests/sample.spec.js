@@ -81,8 +81,8 @@ describe('Main test suite', () => {
       .get('/user/current')
       .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
-    expect(response.body.firstName.toBe('Windsor'));
-    expect(response.body.lastName.toBe('Huang'));
+    expect(response.body.firstName).toBe('Windsor');
+    expect(response.body.lastName).toBe('Huang');
   });
   
   it('Create another user', async () => {
@@ -96,6 +96,7 @@ describe('Main test suite', () => {
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
     userId2 = response.body.userId;
+    console.log('userId2 :>> ', userId2);
   });
 
   it('Get all users', async () => {
@@ -104,6 +105,7 @@ describe('Main test suite', () => {
       .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(2);
+    console.log('response.body :>> ', response.body);
   });
 
   it('Get user by id', async () => {
