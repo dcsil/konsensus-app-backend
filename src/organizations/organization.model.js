@@ -10,7 +10,7 @@ function model(sequelize) {
             allowNull: false,
             primaryKey: true },
         name: { type: DataTypes.STRING, allowNull: false },
-        image: { type: DataTypes.UUID, allowNull: true },
+        image: { type: DataTypes.STRING, allowNull: true },
     };
 
     const options = {

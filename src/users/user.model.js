@@ -25,7 +25,7 @@ function model(sequelize) {
             defaultValue: 'member',
             allowNull: false
         },
-        image: { type: DataTypes.UUID, allowNull: true },
+        image: { type: DataTypes.STRING, allowNull: true },
         ownedFiles: { 
             type: DataTypes.JSON,
             defaultValue: [],
