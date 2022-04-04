@@ -159,7 +159,7 @@ describe('Main test suite', () => {
 
   it('Adding a collaborator', async () => {
     const response = await request(app)
-      .post('/permission/' + fileId + '/' + userId2)
+      .put('/permission/' + fileId + '/' + userId2)
       .set('Authorization', auth1)
       .send({
         canView: true,
