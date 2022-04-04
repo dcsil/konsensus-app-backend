@@ -95,8 +95,7 @@ describe('Main test suite', () => {
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
-    userId2 = response.body.userId;
-    console.log('userId2 :>> ', userId2);
+    userId2 = response.body.id;
   });
 
   it('Get all users', async () => {
@@ -105,7 +104,6 @@ describe('Main test suite', () => {
       .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(2);
-    console.log('response.body :>> ', response.body);
   });
 
   it('Get user by id', async () => {
