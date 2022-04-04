@@ -54,18 +54,17 @@ describe('Main test suite', () => {
       .send({
         firstName: 'Windsor',
         lastName: 'Huang',
-        email: 'windsorisbad@gmail.com',
+        email: 'windsoriscool@gmail.com',
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
-    console.log('response.body :>> ', response.body);
   });
 
   it('Login a user', async () => {
     const response = await request(app)
       .post('/user/authenticate')
       .send({
-        email: 'windsorisbad@gmail.com',
+        email: 'windsoriscool@gmail.com',
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
