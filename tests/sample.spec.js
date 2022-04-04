@@ -32,7 +32,8 @@ describe('Sample test suite', () => {
 describe('Main test suite', () => {
 
   let organizationId;
-  let auth = "Bearer ";
+  let auth1 = "Bearer ";
+  let auth2 = "Bearer ";
   let userId1;
   let userId2;
 
@@ -66,14 +67,14 @@ describe('Main test suite', () => {
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
-    auth += response.body.token;
+    auth1 += response.body.token;
     userId1 = response.body.id;
   });
 
   it('Get all organizations', async () => {
     const response = await request(app)
       .get('/organization')
-      .set('Authorization', auth);
+      .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBeGreaterThan(0);
   });
@@ -81,7 +82,7 @@ describe('Main test suite', () => {
   it('Get current user', async () => {
     const response = await request(app)
       .get('/user/current')
-      .set('Authorization', auth);
+      .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
     expect(response.body.firstName).toBe('Windsor');
     expect(response.body.lastName).toBe('Huang');
@@ -97,13 +98,14 @@ describe('Main test suite', () => {
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
+    auth2 += response.body.token;
     userId2 = response.body.id;
   });
 
   it('Get all users', async () => {
     const response = await request(app)
       .get('/user/all')
-      .set('Authorization', auth);
+      .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(2);
   });
@@ -111,7 +113,7 @@ describe('Main test suite', () => {
   it('Get user by id', async () => {
     const response = await request(app)
       .get('/user/' + userId2)
-      .set('Authorization', auth);
+      .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
     expect(response.body.firstName).toBe('Julian');
     expect(response.body.lastName).toBe('Nadeau');
@@ -122,13 +124,33 @@ describe('Main test suite', () => {
 
     const file = fileService.upload(buffer, "cute_blob.png", null, userId1, false);
     expect(file).toBeTruthy();
-    // const response = await request(app)
-    //   .post('/file/upload')
-    //   .set('Authorization', auth)
-    //   .attach('file', './tests/cute_blob.png');
-    // expect(response.statusCode).toBe(200);
+    
+    let response = await request(app)
+      .get('/file/' + file.id)
+      .set('Authorization', auth1);
+    expect(response.statusCode).toBe(200);
 
+    response = await request(app)
+      .get('/file/' + file.id)
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(401);
 
+  });
+
+  it('Getting owned files', async () => {
+    const response = await request(app)
+      .get('/file/owned')
+      .set('Authorization', auth1);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(1);
+  });
+
+  it('Getting recent files', async () => {
+    const response = await request(app)
+      .get('/file/recent')
+      .set('Authorization', auth1);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(1);
   });
 
 });
