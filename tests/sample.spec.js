@@ -30,7 +30,7 @@ describe('Sample test suite', () => {
 describe('Main test suite', () => {
 
   let organizationId;
-  let accessToken;
+  let auth = "Bearer ";
   let userId1;
   let userId2;
 
@@ -64,14 +64,14 @@ describe('Main test suite', () => {
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
-    accessToken = response.body.token;
+    auth += response.body.token;
     userId1 = response.body.userId;
   });
 
   it('Get all organizations', async () => {
     const response = await request(app)
       .get('/organization')
-      .set('Authorization', accessToken);
+      .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBeGreaterThan(0);
   });
@@ -79,7 +79,7 @@ describe('Main test suite', () => {
   it('Get current user', async () => {
     const response = await request(app)
       .get('/user/current')
-      .set('Authorization', accessToken);
+      .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.firstName.toBe('Windsor'));
     expect(response.body.lastName.toBe('Huang'));
@@ -101,7 +101,7 @@ describe('Main test suite', () => {
   it('Get all users', async () => {
     const response = await request(app)
       .get('/user/all')
-      .set('Authorization', accessToken);
+      .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(2);
   });
@@ -109,7 +109,7 @@ describe('Main test suite', () => {
   it('Get user by id', async () => {
     const response = await request(app)
       .get('/user/' + userId2)
-      .set('Authorization', accessToken);
+      .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
     expect(response.body.firstName.toBe('Julian'));
     expect(response.body.lastName.toBe('Nadeau'));
