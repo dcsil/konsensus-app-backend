@@ -1,6 +1,7 @@
 const request = require('supertest');
 const app = require('../src/server');
 const fileService = require('../src/files/file.service');
+const { put } = require('../src/organizations/organization.controller');
 const Buffer = require('buffer/').Buffer
 
 function delay() {
@@ -197,6 +198,29 @@ describe('Main test suite', () => {
     expect(response.body.length).toBe(1);
   });
 
+  it('Starring and unstarring a file', async () => {
+    let response = await request(app)
+    put('/file/star/' + fileId)
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(200);
+
+    response = await request(app)
+      .get('/file/starred')
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(1);
+
+    response = await request(app)
+    put('/file/star/' + fileId)
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(200);
+
+    response = await request(app)
+      .get('/file/starred')
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(0);
+  });
 });
 
 afterAll(() => {
