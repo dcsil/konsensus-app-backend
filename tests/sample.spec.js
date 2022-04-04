@@ -122,7 +122,7 @@ describe('Main test suite', () => {
   it('File upload', async () => {
     const buffer = Buffer.from('some data');
 
-    const file = fileService.upload(buffer, "cute_blob.png", null, userId1, false);
+    const file = await fileService.upload(buffer, "cute_blob.png", null, userId1, false);
     expect(file).toBeTruthy();
     console.log('file :>> ', file);
     console.log('file.id :>> ', file.id);
