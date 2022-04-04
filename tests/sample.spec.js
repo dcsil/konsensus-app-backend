@@ -54,7 +54,7 @@ describe('Main test suite', () => {
       .send({
         firstName: 'Windsor',
         lastName: 'Huang',
-        email: 'windsoriscool@gmail.com',
+        email: 'windsorisbad@gmail.com',
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
@@ -65,7 +65,7 @@ describe('Main test suite', () => {
     const response = await request(app)
       .post('/user/authenticate')
       .send({
-        email: 'windsoriscool@gmail.com',
+        email: 'windsorisbad@gmail.com',
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
