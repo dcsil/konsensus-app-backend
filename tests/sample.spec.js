@@ -40,12 +40,12 @@ describe('Users test suite', () => {
     expect(response.statusCode).toBe(200);
   });
 
-  it('Get all organizations', async () => {
-    const response = await request(app).get('/organization');
-    expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBeGreaterThan(0);
-    organizationId = response.body[0].id;
-  });
+  // it('Get all organizations', async () => {
+  //   const response = await request(app).get('/organization');
+  //   expect(response.statusCode).toBe(200);
+  //   expect(response.body.length).toBeGreaterThan(0);
+  //   organizationId = response.body[0].id;
+  // });
 
   it('Create a user', async () => {
     const response = await request(app)
@@ -57,6 +57,7 @@ describe('Users test suite', () => {
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
+    console.log('response.message :>> ', response.message);
   });
 
   it('Login a user', async () => {
@@ -67,6 +68,7 @@ describe('Users test suite', () => {
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
+    console.log('response.message :>> ', response.message);
   });
 });
 

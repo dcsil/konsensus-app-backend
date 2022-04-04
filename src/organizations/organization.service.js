@@ -6,7 +6,8 @@ module.exports = {
 };
 
 async function create(params) {
-    await db.Organization.create(params);
+    const org = await db.Organization.create(params);
+    return org.id;
 }
 
 async function getAll() {
