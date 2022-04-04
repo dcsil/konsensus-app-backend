@@ -119,21 +119,23 @@ describe('Main test suite', () => {
     expect(response.body.lastName).toBe('Nadeau');
   });
 
+  let fileId;
   it('File upload', async () => {
     const buffer = Buffer.from('some data');
 
     const file = await fileService.upload(buffer, "cute_blob.png", null, userId1, false);
     expect(file).toBeTruthy();
+    fileId = file.id;
     console.log('file :>> ', file);
     console.log('file.id :>> ', file.id);
     
     let response = await request(app)
-      .get('/file/' + file.id)
+      .get('/file/' + fileId)
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
 
     response = await request(app)
-      .get('/file/' + file.id)
+      .get('/file/' + fileId)
       .set('Authorization', auth2);
     expect(response.statusCode).toBe(401);
 
@@ -151,6 +153,36 @@ describe('Main test suite', () => {
     const response = await request(app)
       .get('/file/recent')
       .set('Authorization', auth1);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(1);
+  });
+
+  it('Adding a collaborator', async () => {
+    const response = await request(app)
+      .post('/permission/' + fileId + '/' + userId2)
+      .set('Authorization', auth1)
+      .send({
+        canView: true,
+        canEdit: true,
+      });
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('Getting collaborators', async () => {
+    const response = await request(app)
+      .get('/permission/' + fileId + '/' + userId2)
+      .set('Authorization', auth2);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.canView).toBe(true);
+    expect(response.body.canEdit).toBe(true);
+    expect(response.body.canShare).toBe(false);
+    expect(response.body.isAdmin).toBe(false);
+  });
+
+  it('Getting all files', async () => {
+    const response = await request(app)
+      .get('/file/all')
+      .set('Authorization', auth2);
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(1);
   });
