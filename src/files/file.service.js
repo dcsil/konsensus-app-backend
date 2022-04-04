@@ -24,29 +24,31 @@ AWS.config.update({
 
 const s3 = new AWS.S3();
 
-async function upload(buffer, name, type, userId) {
+async function upload(buffer, name, type, userId, uploadToS3=true) {
     const fileId = crypto.randomUUID()
 
     const params = {
         ACL: 'public-read',
         Body: buffer,
         Bucket: process.env.S3_BUCKET,
-        ContentType: type.mime,
+        ContentType: type?.mime,
         Key: fileId,
     };
 
     try {
-        await s3.upload(params).promise();
+        if (uploadToS3) {
+            await s3.upload(params).promise();
+        }
 
         fileModel = {
             id: fileId,
             name: name,
-            type: type.mime,
+            type: type?.mime,
             lastUpdater: userId,
         };
 
         // save file to DB, update users model, add permission
-        await db.File.create(fileModel);
+        const file = await db.File.create(fileModel);
         await db.User.update(
             { 'ownedFiles': db.sequelize.fn('json_array_append', db.sequelize.col('ownedFiles'), '$', fileId) },
             { where: { id: userId } });
@@ -62,6 +64,7 @@ async function upload(buffer, name, type, userId) {
                 isAdmin: true,
             }
         );
+        return file;
     }
     catch (err) {
         console.log(err);

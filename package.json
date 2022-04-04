@@ -10,7 +10,7 @@
     "scripts": {
         "start": "node ./src/server.js",
         "start:dev": "nodemon ./src/server.js",
-        "test": "NODE_OPTIONS=--experimental-vm-modules jest --coverage --detectOpenHandles",
+        "test": "jest --coverage --detectOpenHandles",
         "test:watch": "npm run test -- --watch"
     },
     "dependencies": {
@@ -19,6 +19,7 @@
         "aws-sdk": "^2.1095.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.19.0",
+        "buffer": "^6.0.3",
         "cors": "^2.8.5",
         "dotenv": "^16.0.0",
         "express": "^4.17.1",
@@ -49,9 +50,7 @@
             "node_modules"
         ],
         "verbose": true,
-        "coverageReporters": ["clover", "json", "lcov", ["text", {"skipFull": true}]],
-        "transformIgnorePatterns": []
-    },
+        "coverageReporters": ["clover", "json", "lcov", ["text", {"skipFull": true}]]    },
     "nyc": {
         "reporter": [
             "lcov"

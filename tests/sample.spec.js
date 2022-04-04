@@ -1,5 +1,7 @@
 const request = require('supertest');
 const app = require('../src/server');
+const fileService = require('../src/file/file.service');
+const Buffer = require('buffer/').Buffer
 
 function delay() {
   return new Promise((resolve, reject) => {
@@ -116,11 +118,17 @@ describe('Main test suite', () => {
   });
 
   it('File upload', async () => {
-    const response = await request(app)
-      .post('/file/upload')
-      .set('Authorization', auth)
-      .attach('file', './tests/cute_blob.png');
-    expect(response.statusCode).toBe(200);
+    const buffer = Buffer.from('some data');
+
+    const file = fileService.upload(buffer, "cute_blob.png", null, userId1, false);
+    expect(file).toBeTruthy();
+    // const response = await request(app)
+    //   .post('/file/upload')
+    //   .set('Authorization', auth)
+    //   .attach('file', './tests/cute_blob.png');
+    // expect(response.statusCode).toBe(200);
+
+
   });
 
 });
