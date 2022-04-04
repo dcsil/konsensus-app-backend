@@ -58,6 +58,7 @@ describe('Main test suite', () => {
         password: '123456',
         organizationId: organizationId});
     expect(response.statusCode).toBe(200);
+    console.log('response.body :>> ', response.body);
   });
 
   it('Login a user', async () => {
