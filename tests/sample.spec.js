@@ -115,6 +115,14 @@ describe('Main test suite', () => {
     expect(response.body.lastName).toBe('Nadeau');
   });
 
+  it('File upload', async () => {
+    const response = await request(app)
+      .post('/file/upload')
+      .set('Authorization', auth)
+      .attach('file', './tests/cute_blob.png');
+    expect(response.statusCode).toBe(200);
+  });
+
 });
 
 afterAll(() => {
