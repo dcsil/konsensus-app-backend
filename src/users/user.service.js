@@ -117,6 +117,10 @@ async function getUser(id) {
 }
 
 async function getProfilePicture(id) {
+    const user = await db.User.findByPk(id);
+    if (!user.image) {
+        return;
+    }
     const key = `user-profile/${id}`;
 
     const urlParams = {
