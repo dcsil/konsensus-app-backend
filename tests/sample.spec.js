@@ -124,6 +124,8 @@ describe('Main test suite', () => {
 
     const file = fileService.upload(buffer, "cute_blob.png", null, userId1, false);
     expect(file).toBeTruthy();
+    console.log('file :>> ', file);
+    console.log('file.id :>> ', file.id);
     
     let response = await request(app)
       .get('/file/' + file.id)
