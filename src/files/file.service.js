@@ -75,7 +75,7 @@ async function upload(buffer, name, type, userId, uploadToS3=true) {
 async function reupload(buffer, name, type, fileId, userId) {
 
     try {
-        validatePermissions(userId, fileId, 'write');
+        await validatePermissions(userId, fileId, 'write');
 
         const params = {
             ACL: 'public-read',
@@ -106,7 +106,7 @@ async function star(user, fileId) {
     const starredFiles = user.starredFiles;
 
     try {
-        validatePermissions(userId, fileId, 'read');
+        await validatePermissions(userId, fileId, 'read');
 
         if (starredFiles.includes(fileId)) {
             starredFiles.splice(starredFiles.indexOf(fileId), 1);
@@ -152,14 +152,13 @@ async function getAll(userId) {
     }
 }
 
-async function getById(user, id) {
-    validatePermissions(user.id, id, 'read');
+async function getById(id) {
     return await getFile(id);
 }
 
 async function accessById(user, id) {
     try {
-        validatePermissions(user.id, id, 'read');
+        await validatePermissions(user.id, id, 'read');
 
         const fileModel = await getFile(id);
         const params = {
