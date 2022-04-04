@@ -111,8 +111,8 @@ describe('Main test suite', () => {
       .get('/user/' + userId2)
       .set('Authorization', auth);
     expect(response.statusCode).toBe(200);
-    expect(response.body.firstName.toBe('Julian'));
-    expect(response.body.lastName.toBe('Nadeau'));
+    expect(response.body.firstName).toBe('Julian');
+    expect(response.body.lastName).toBe('Nadeau');
   });
 
 });
