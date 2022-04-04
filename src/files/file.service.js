@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 
 module.exports = {
     upload,
+    reupload,
     getAll,
     getById,
     accessById,
@@ -61,6 +62,35 @@ async function upload(buffer, name, type, userId) {
                 isAdmin: true,
             }
         );
+    }
+    catch (err) {
+        console.log(err);
+        throw err;
+    }
+};
+
+async function reupload(buffer, name, type, fileId, userId) {
+
+    try {
+        validatePermissions(userId, fileId, 'write');
+
+        const params = {
+            ACL: 'public-read',
+            Body: buffer,
+            Bucket: process.env.S3_BUCKET,
+            ContentType: type.mime,
+            Key: fileId,
+        };
+
+        await s3.upload(params).promise();
+
+        fileModel = {
+            id: fileId,
+            name: name,
+            type: type.mime,
+            lastUpdater: userId,
+        };
+
     }
     catch (err) {
         console.log(err);
