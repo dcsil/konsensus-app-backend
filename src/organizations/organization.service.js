@@ -1,4 +1,5 @@
 const db = require('../_helpers/db');
+const AWS = require('aws-sdk');
 
 module.exports = {
     create,
