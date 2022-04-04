@@ -15,12 +15,7 @@ We support these user endpoints.
 ```
 
 `POST /user/register`  
-- Registers the user and returns:
-```
-{
-    message: 'Registration successful'
-}
-```
+- Registers the user and returns the new user model.
 - The following body is required
 ```
 {

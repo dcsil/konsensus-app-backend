@@ -89,7 +89,7 @@ function getAll(req, res, next) {
 }
 
 function getById(req, res, next) {
-    filesService.getById(req.params.id)
+    filesService.getById(req.user, req.params.id)
         .then(file => res.json(file))
         .catch(next);
 }

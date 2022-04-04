@@ -23,7 +23,7 @@ function createSchema(req, res, next) {
 
 function create(req, res, next) {
     organizationService.create(req.body)
-        .then(() => res.json({ message: 'Creation successful' }))
+        .then((id) => res.json({ message: 'Creation successful', organizationId: id}))
         .catch(next);
 }
 
