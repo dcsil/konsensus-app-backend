@@ -37,7 +37,6 @@ async function setPicture(buffer, type, organizationId) {
         await s3.upload(uploadParams).promise();
 
         const url = await getPicture(organizationId);
-        console.log('url :>> ', url);
         return url;
     }
     catch (err) {
@@ -57,11 +56,9 @@ async function getPicture(id) {
     };
 
     const url = await s3.getSignedUrlPromise('getObject', urlParams);
-    // console.log('url :>> ', url);
 
-    await db.User.findByPk(id).then(async user => { 
-        // console.log('user :>> ', user);
-        await user.update({
+    await db.Organization.findByPk(id).then(async org => { 
+        await org.update({
             image: url
         })
        

@@ -98,7 +98,6 @@ async function setProfilePicture(buffer, type, userId) {
         await s3.upload(uploadParams).promise();
 
         const url = await getProfilePicture(userId);
-        console.log('url :>> ', url);
         return url;
     }
     catch (err) {
@@ -118,7 +117,6 @@ async function getUser(id) {
 }
 
 async function getProfilePicture(id) {
-    console.log('id :>> ', id);
     const key = `user-profile/${id}`;
 
     const urlParams = {
@@ -128,10 +126,8 @@ async function getProfilePicture(id) {
     };
 
     const url = await s3.getSignedUrlPromise('getObject', urlParams);
-    // console.log('url :>> ', url);
 
     await db.User.findByPk(id).then(async user => { 
-        // console.log('user :>> ', user);
         await user.update({
             image: url
         })
