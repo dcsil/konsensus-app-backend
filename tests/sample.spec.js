@@ -1,7 +1,6 @@
 const request = require('supertest');
 const app = require('../src/server');
 const fileService = require('../src/files/file.service');
-const { put } = require('../src/organizations/organization.controller');
 const Buffer = require('buffer/').Buffer
 
 function delay() {
@@ -14,6 +13,7 @@ function delay() {
 
 beforeAll(async () => {
   await delay();
+  jest.setTimeout(50 * 1000);
 });
 
 describe('Sample test suite', () => {
