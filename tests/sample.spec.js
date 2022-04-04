@@ -38,6 +38,7 @@ describe('Users test suite', () => {
         name: 'Facebook',
       });
     expect(response.statusCode).toBe(200);
+    organizationId = response.body.organizationId;
   });
 
   // it('Get all organizations', async () => {
