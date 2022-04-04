@@ -147,7 +147,7 @@ describe('Main test suite', () => {
     response = await request(app)
       .get('/file/' + fileId)
       .set('Authorization', auth2);
-    expect(response.statusCode).toBe(401);
+    expect(response.statusCode).not.toBe(200);
 
   });
 

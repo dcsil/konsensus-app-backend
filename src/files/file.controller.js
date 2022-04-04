@@ -91,17 +91,9 @@ function getAll(req, res, next) {
 }
 
 function getById(req, res, next) {
-    filesService.validatePermissions(req.user, req.params.id, 'read')
-        .then(() => 
-            filesService.getById(req.params.id)
-            .then(file => res.json(file))
-            .catch(next))
-        .catch((err) => {
-            console.log(err);
-            return res.status(401).send(err)
-    });
-        
-            
+    filesService.getById(req.user, req.params.id)
+        .then(file => res.json(file))
+        .catch(next);
 }
 
 function accessById(req, res, next) {
