@@ -1,6 +1,6 @@
 const request = require('supertest');
 const app = require('../src/server');
-const fileService = require('../src/file/file.service');
+const fileService = require('../src/files/file.service');
 const Buffer = require('buffer/').Buffer
 
 function delay() {
