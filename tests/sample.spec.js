@@ -67,7 +67,7 @@ describe('Main test suite', () => {
       });
     expect(response.statusCode).toBe(200);
     auth += response.body.token;
-    userId1 = response.body.userId;
+    userId1 = response.body.id;
   });
 
   it('Get all organizations', async () => {
