@@ -78,6 +78,15 @@ We support these user endpoints.
 }
 ```
 
+`PUT /image`
+- Updates the profile picture of the current user.
+- You must send FormData with the following fields:  
+```
+{
+    file: File
+}
+```
+
 `DELETE /user/:id`
 - Deletes the user with the given user id and returns
 ```
@@ -102,6 +111,15 @@ The below routes require authorization with a JWT token in the _.
 
 `GET /organization`
 - Gets all the organizations in the database (for testing).
+
+`PUT /image`
+- Updates the profile picture of the current user's organization.
+- You must send FormData with the following fields:  
+```
+{
+    file: File
+}
+```
 
 ## Files
 We support these file endpoints. All the routes require authorization with a JWT bearer token.

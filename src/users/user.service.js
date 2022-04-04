@@ -2,6 +2,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const db = require('../_helpers/db');
+const AWS = require('aws-sdk');
 
 module.exports = {
     authenticate,
@@ -9,8 +10,17 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    setProfilePicture,
 };
+
+// configure the keys for accessing AWS
+AWS.config.update({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const s3 = new AWS.S3();
 
 async function authenticate({ email, password }) {
     const user = await db.User.scope('withHash').findOne({ where: { email } });
@@ -73,13 +83,57 @@ async function _delete(id) {
     await user.destroy();
 }
 
+async function setProfilePicture(buffer, type, userId) {
+    const key  =`user-profile/${userId}`;
+
+    try {
+        const uploadParams = {
+            ACL: 'public-read',
+            Body: buffer,
+            Bucket: process.env.S3_BUCKET,
+            ContentType: type.mime,
+            Key: key,
+        };
+
+        await s3.upload(uploadParams).promise();
+
+        const url = await getProfilePicture(userId);
+        return url;
+    }
+    catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
 // helper functions
 
 async function getUser(id) {
+    await getProfilePicture(id);
     const user = await db.User.findByPk(id);
+
     if (!user) throw 'User not found';
     const org = await db.Organization.findByPk(user.organizationId);
     return { ...omitHash(user.get()), organization: org.get() };
+}
+
+async function getProfilePicture(id) {
+    const key = `user-profile/${id}`;
+
+    const urlParams = {
+        Bucket: process.env.S3_BUCKET,
+        Key: key,
+        Expires: 60 * 60 * 24 * 7,       // 1 week (max time)
+    };
+
+    const url = await s3.getSignedUrlPromise('getObject', urlParams);
+
+    await db.User.findByPk(id).then(async user => { 
+        await user.update({
+            image: url
+        })
+       
+    });
+    return url;
 }
 
 function omitHash(user) {
