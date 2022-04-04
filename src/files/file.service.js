@@ -152,7 +152,8 @@ async function getAll(userId) {
     }
 }
 
-async function getById(id) {
+async function getById(user, id) {
+    validatePermissions(user.id, id, 'read');
     return await getFile(id);
 }
 
