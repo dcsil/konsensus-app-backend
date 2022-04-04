@@ -107,7 +107,16 @@ The below routes require authorization with a JWT token in the _.
 We support these file endpoints. All the routes require authorization with a JWT bearer token.
 
 `POST /file/upload`
-- Uploads a new file to S3`
+- Uploads a new file to S3
+- You must send FormData with the following fields:  
+```
+{
+    file: File
+}
+```
+
+`PUT /file/:id`
+- Updates the file with the given file ID.
 - You must send FormData with the following fields:  
 ```
 {
