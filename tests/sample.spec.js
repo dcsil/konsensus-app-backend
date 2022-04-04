@@ -89,17 +89,27 @@ describe('Main test suite', () => {
   });
   
   it('Create another user', async () => {
-    const response = await request(app)
+    let response = await request(app)
       .post('/user/register')
       .send({
         firstName: 'Julian',
         lastName: 'Nadeau',
-        email: 'julianisnot@gmail.com',
+        email: 'julianisnotcool@gmail.com',
         password: '123456',
-        organizationId: organizationId});
+        organizationId: organizationId
+    });
+    expect(response.statusCode).toBe(200);
+    userId2 = response.body.id;
+
+    response = await request(app)
+      .post('/user/authenticate')
+      .send({
+        email: 'julianisnotcool@gmail.com',
+        password: '123456'
+      });
     expect(response.statusCode).toBe(200);
     auth2 += response.body.token;
-    userId2 = response.body.id;
+    console.log('auth2 :>> ', auth2);
   });
 
   it('Get all users', async () => {
