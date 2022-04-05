@@ -11,6 +11,7 @@ function model(sequelize) {
             primaryKey: true },
         name: { type: DataTypes.STRING, allowNull: false },
         type: { type: DataTypes.STRING, allowNull: true },
+        size: { type: DataTypes.INTEGER, allowNull: true },
         lastUpdater: { 
             type: DataTypes.UUID,
             references: {

@@ -1,5 +1,4 @@
 require('dotenv').config();
-// const AWS = require('aws-sdk');
 const db = require('../_helpers/db');
 const crypto = require('crypto');
 const { Op } = require("sequelize");
@@ -23,15 +22,13 @@ async function upload(file, userId) {
     const fileId = crypto.randomUUID()
     
     const result = await aws.uploadToS3(file, fileId);
-    // if (uploadToS3) {
-    //    result = await aws.uploadToS3(file, fileId);
-    // }
 
     const params = {
         id: fileId,
         name: file.originalFilename,
         type: result?.type?.mime,
         lastUpdater: userId,
+        size: file.size,
     };
 
     // save file to DB, update users model, add permission
@@ -64,7 +61,6 @@ async function star(user, fileId) {
 
     try {
         const viewPermission = await permissionService.getPermission(fileId, userId);
-        console.log('viewPermission :>> ', viewPermission);
         if (!viewPermission || !viewPermission.canView) {
             throw Error('User has insufficient permissions view/star file.');
         }
@@ -193,7 +189,6 @@ async function getFile(id) {
 }
 
 async function createNewFileInDb(fileModel) {
-    console.log('fileModel :>> ', fileModel);
     const file = await db.File.create(fileModel);
     const userId = fileModel.lastUpdater;
     const fileId = fileModel.id;

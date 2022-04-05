@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authorize = require('../_middleware/authorize')
 const filesService = require('./file.service');
-// const fileType = require('file-type');
 const multiparty = require('multiparty');
-const fs = require('fs');
   
 // routes
 router.post('/upload', authorize(), upload);

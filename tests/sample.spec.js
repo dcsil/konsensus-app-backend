@@ -138,6 +138,7 @@ describe('Main test suite', () => {
       name: "not-a-real-file.png",
       type: "img/png",
       lastUpdater: userId1,
+      size: 123,
   };
 
     const file = await fileService.createNewFileInDb(params);
