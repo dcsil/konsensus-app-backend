@@ -1,8 +1,10 @@
 require('dotenv').config();
-const AWS = require('aws-sdk');
+// const AWS = require('aws-sdk');
 const db = require('../_helpers/db');
 const crypto = require('crypto');
 const { Op } = require("sequelize");
+const aws = require('../_helpers/aws');
+const permissionService = require('../permissions/permission.service');
 
 module.exports = {
     upload,
@@ -13,93 +15,54 @@ module.exports = {
     getOwnedFiles,
     getStarredFiles,
     getRecentFiles,
-    star,
-    validatePermissions
+    star
 };
 
 // configure the keys for accessing AWS
-AWS.config.update({
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-});
+// AWS.config.update({
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+// });
 
-const s3 = new AWS.S3();
+// const s3 = new AWS.S3();
 
-async function upload(buffer, name, type, userId, uploadToS3=true) {
+async function upload(file, userId, uploadToS3=true) {
     const fileId = crypto.randomUUID()
+    
+    let result;
+    if (uploadToS3) {
+       result = await aws.uploadToS3(file, fileId);
+    }
 
     const params = {
-        ACL: 'public-read',
-        Body: buffer,
-        Bucket: process.env.S3_BUCKET,
-        ContentType: type?.mime,
-        Key: fileId,
+        id: fileId,
+        name: file.originalFilename,
+        type: result.type?.mime,
+        lastUpdater: userId,
     };
 
-    try {
-        if (uploadToS3) {
-            await s3.upload(params).promise();
-        }
-
-        fileModel = {
-            id: fileId,
-            name: name,
-            type: type?.mime,
-            lastUpdater: userId,
-        };
-
-        // save file to DB, update users model, add permission
-        const file = await db.File.create(fileModel);
-        await db.User.update(
-            { 'ownedFiles': db.sequelize.fn('json_array_append', db.sequelize.col('ownedFiles'), '$', fileId) },
-            { where: { id: userId } });
-        await db.User.update(
-            { 'recentFiles': db.sequelize.fn('json_array_append', db.sequelize.col('recentFiles'), '$', fileId) },
-            { where: { id: userId } });
-        await db.Permission.create(
-            {
-                userId: userId,
-                fileId: fileId,
-                canEdit: true,
-                canShare: true,
-                isAdmin: true,
-            }
-        );
-        return file;
-    }
-    catch (err) {
-        console.log(err);
-        throw err;
-    }
+    // save file to DB, update users model, add permission
+    const fileModel = await createNewFileInDb(params);
+    return fileModel;
 };
 
-async function reupload(buffer, name, type, fileId, userId) {
+async function reupload(file, fileId, userId) {
 
-    try {
-        await validatePermissions(userId, fileId, 'write');
-
-        const params = {
-            ACL: 'public-read',
-            Body: buffer,
-            Bucket: process.env.S3_BUCKET,
-            ContentType: type.mime,
-            Key: fileId,
-        };
-
-        await s3.upload(params).promise();
-
-        fileModel = {
-            id: fileId,
-            name: name,
-            type: type.mime,
-            lastUpdater: userId,
-        };
-
+    const editPermission = await permissionService.getPermission(fileId, userId)
+    if (!editPermission || !editPermission.canEdit) {
+        throw Error('User has insufficient permissions to edit/reupload file.');
     }
-    catch (err) {
-        console.log(err);
-        throw err;
-    }
+
+    let type = await aws.uploadToS3(file, fileId).type;
+
+    fileModel = {
+        id: fileId,
+        name: file.originalFilename,
+        type: type.mime,
+        lastUpdater: userId,
+    };
+
+    await db.File.update(fileModel, { where: { id: fileId } });
 };
 
 async function star(user, fileId) {
@@ -107,7 +70,11 @@ async function star(user, fileId) {
     const starredFiles = user.starredFiles;
 
     try {
-        await validatePermissions(userId, fileId, 'read');
+        const viewPermission = await permissionService.getPermission(fileId, userId);
+        console.log('viewPermission :>> ', viewPermission);
+        if (!viewPermission || !viewPermission.canView) {
+            throw Error('User has insufficient permissions view/star file.');
+        }
 
         if (starredFiles.includes(fileId)) {
             starredFiles.splice(starredFiles.indexOf(fileId), 1);
@@ -124,7 +91,7 @@ async function star(user, fileId) {
     }
     catch (err) {
         console.log(err);
-        throw Error('Error starring file.');
+        throw err;
     }
 }
 
@@ -154,13 +121,19 @@ async function getAll(userId) {
 }
 
 async function getById(user, id) {
-    await validatePermissions(user.id, id, 'read');
+    const permission = await permissionService.getPermission(id, user.id)
+    if (!permission || !permission.canView) {
+        throw Error('User has insufficient permissions to get the File Model.');
+    }
     return await getFile(id);
 }
 
 async function accessById(user, id) {
     try {
-        await validatePermissions(user.id, id, 'read');
+        const permission = await permissionService.getPermission(id, user.id)
+        if (!permission || !permission.canView) {
+            throw Error('User has insufficient permissions to view the file.');
+        }
 
         const fileModel = await getFile(id);
         const params = {
@@ -168,14 +141,14 @@ async function accessById(user, id) {
             Key: fileModel.id,
         };
 
-        const url = await s3.getSignedUrlPromise('getObject',
+        const url = await aws.getSignedUrl(
             {
                 ...params,
                 Expires: 60 * 10,       // 10 minutes
             }
         );
 
-        const object = await s3.getObject(params).promise();
+        const object = await aws.getObject(params);
 
         return {...fileModel.dataValues, url: url, object: object};
     }
@@ -228,53 +201,26 @@ async function getFile(id) {
     return file;
 }
 
-
-async function validatePermissions(userId, fileId, action) {
-    let permission;
-    switch (action) {
-        case 'read':
-            permission = await db.Permission.findOne({
-                where: {
-                    userId: userId,
-                    fileId: fileId,
-                    canView: true,
-                }
-            });
-            break;
-        case 'write':
-            permission = await db.Permission.findOne({
-                where: {
-                    userId: userId,
-                    fileId: fileId,
-                    canView: true,
-                    canEdit: true,
-                }
-            });
-            break;
-        case 'share':
-            permission = await db.Permission.findOne({
-                where: {
-                    userId: userId,
-                    fileId: fileId,
-                    canView: true,
-                    canEdit: true,
-                    canShare: true,
-                }
-            });
-            break;
-        case 'admin':
-            permission = await db.Permission.findOne({
-                where: {
-                    userId: userId,
-                    fileId: fileId,
-                    isAdmin: true,
-                }
-            });
-            break;
-        default:
-            throw Error('Invalid action provided.')
-
-    }
-    if (!permission) throw Error('User does not have necessary permissions');
-    return permission;
+async function createNewFileInDb(fileModel) {
+    console.log('fileModel :>> ', fileModel);
+    const file = await db.File.create(fileModel);
+    const userId = fileModel.lastUpdater;
+    const fileId = fileModel.id;
+    
+    await db.User.update(
+        { 'ownedFiles': db.sequelize.fn('json_array_append', db.sequelize.col('ownedFiles'), '$', fileId) },
+        { where: { id: userId } });
+    await db.User.update(
+        { 'recentFiles': db.sequelize.fn('json_array_append', db.sequelize.col('recentFiles'), '$', fileId) },
+        { where: { id: userId } });
+    await db.Permission.create(
+        {
+            userId: userId,
+            fileId: fileId,
+            canEdit: true,
+            canShare: true,
+            isAdmin: true,
+        }
+    );
+    return file
 }

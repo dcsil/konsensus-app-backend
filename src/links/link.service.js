@@ -1,5 +1,6 @@
 const db = require('../_helpers/db');
-const fileService = require('../files/file.service');
+// const validatePermissions = require('../helpers/validate-permissions');
+const permissionService = require('../permissions/permission.service');
 
 module.exports = {
     share,
@@ -9,18 +10,17 @@ module.exports = {
 async function share(fields, currentUser) {
     // save user
     try {
-        fileService.validatePermissions(currentUser.id, fields.fileId, 'share');
-        console.log('currentUser.id :>> ', currentUser.id);
-        console.log('typeof currentUser.id :>> ', typeof currentUser.id);
+        const permission = await permissionService.getPermission(fields.fileId, currentUser.id);
+        if (!permission || !permission.canShare || !permission.isAdmin) {
+            throw Error('User has insufficient permissions to share this file.');
+        }
+
         const params = {
             ...fields,
             sharerId: currentUser.id,
         }
-        console.log('params :>> ', params);
         const link = await db.Link.create(params);
-        console.log('link.dataValues :>> ', link.dataValues);
         return link.dataValues.shareToken;
-        // return "nnothing";
     }
     catch(err) {
         console.log(err);
