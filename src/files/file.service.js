@@ -15,16 +15,17 @@ module.exports = {
     getOwnedFiles,
     getStarredFiles,
     getRecentFiles,
-    star
+    star,
+    createNewFileInDb
 };
 
-async function upload(file, userId, uploadToS3=true) {
+async function upload(file, userId) {
     const fileId = crypto.randomUUID()
     
-    let result;
-    if (uploadToS3) {
-       result = await aws.uploadToS3(file, fileId);
-    }
+    const result = await aws.uploadToS3(file, fileId);
+    // if (uploadToS3) {
+    //    result = await aws.uploadToS3(file, fileId);
+    // }
 
     const params = {
         id: fileId,

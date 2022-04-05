@@ -130,11 +130,17 @@ describe('Main test suite', () => {
     expect(response.body.lastName).toBe('Nadeau');
   });
 
-  let fileId;
+  const fileId = crypto.randomUUID()
   it('File upload', async () => {
-    const buffer = Buffer.from('some data');
 
-    const file = await fileService.upload(buffer, "cute_blob.png", null, userId1, false);
+    const params = {
+      id: fileId,
+      name: "not-a-real-file.png",
+      type: "img/png",
+      lastUpdater: userId1,
+  };
+
+    const file = await fileService.createNewFileInDb(params);
     expect(file).toBeTruthy();
     fileId = file.id;
     console.log('file :>> ', file);
