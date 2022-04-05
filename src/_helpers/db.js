@@ -41,7 +41,8 @@ async function initialize() {
     db.File = require('../files/file.model')(sequelize);
     db.Organization = require('../organizations/organization.model')(sequelize);
     db.Permission = require('../permissions/permission.model')(sequelize);
-
+    db.Link = require('../links/link.model')(sequelize);
+    
     db.sequelize = sequelize;
     // sync all models with database
     await sequelize.sync();

@@ -246,3 +246,28 @@ If an existing permission is updated, returns:
     updatedAt: string
 }
 ```
+
+## Links
+
+Links are used to support permission sharing. We support these routes.
+
+`GET /link/:shareToken`
+- Returns the link object associated with the shareToken, as well as a presigned S3 URL to the file.
+- Does not require authorization.
+
+The following routes require authorization with a JWT bearer token.
+
+`POST /link/share`
+- Creates a new link object, which is identified by a share token that can be given to an external collaborator.
+- Requires the following body:
+``` 
+{
+    fileID: string,
+    email: string
+}
+```
+- Returns:
+```
+{
+    shareToken: string
+}

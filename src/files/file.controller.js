@@ -29,16 +29,9 @@ function upload(req, res, next) {
 
         try {
             const file = files.file[0];
-            const buffer = fs.readFileSync(file.path);
-            /**
-             * Import 'file-type' ES-Module in CommonJS Node.js module
-            */
-            const { fileTypeFromBuffer } = await (eval('import("file-type")'));
-            const type = await fileTypeFromBuffer(buffer);
-            const fileName = file.originalFilename;
             const userId = req.user.id;
 
-            const data = await filesService.upload(buffer, fileName, type, userId);
+            const data = await filesService.upload(file, userId);
             return res.status(200).send(data);
         } catch (err) {
             console.log(err);
@@ -57,17 +50,10 @@ function reupload(req, res, next) {
 
         try {
             const file = files.file[0];
-            const buffer = fs.readFileSync(file.path);
-            /**
-             * Import 'file-type' ES-Module in CommonJS Node.js module
-            */
-            const { fileTypeFromBuffer } = await (eval('import("file-type")'));
-            const type = await fileTypeFromBuffer(buffer);
-            const fileName = file.originalFilename;
             const userId = req.user.id;
             const fileId = req.params.id;
 
-            const data = await filesService.reupload(buffer, fileName, type, fileId, userId);
+            const data = await filesService.reupload(file, fileId, userId);
             return res.status(200).send(data);
         } catch (err) {
             console.log(err);
