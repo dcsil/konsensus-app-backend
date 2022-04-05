@@ -1,7 +1,7 @@
 const request = require('supertest');
 const app = require('../src/server');
 const fileService = require('../src/files/file.service');
-const Buffer = require('buffer/').Buffer
+const crypto = require('crypto');
 
 function delay() {
   return new Promise((resolve, reject) => {
