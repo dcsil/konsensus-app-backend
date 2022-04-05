@@ -3,6 +3,7 @@ const db = require('../_helpers/db');
 module.exports = {
     createOrUpdate,
     getByIds,
+    validatePermissions
 };
 
 async function createOrUpdate(fileId, userId, updateFields, currentUser) {

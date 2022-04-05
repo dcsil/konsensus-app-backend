@@ -13,7 +13,8 @@ module.exports = {
     getOwnedFiles,
     getStarredFiles,
     getRecentFiles,
-    star
+    star,
+    validatePermissions
 };
 
 // configure the keys for accessing AWS
@@ -246,7 +247,7 @@ async function validatePermissions(userId, fileId, action) {
                     userId: userId,
                     fileId: fileId,
                     canView: true,
-                    canWrite: true,
+                    canEdit: true,
                 }
             });
             break;
@@ -256,7 +257,7 @@ async function validatePermissions(userId, fileId, action) {
                     userId: userId,
                     fileId: fileId,
                     canView: true,
-                    canWrite: true,
+                    canEdit: true,
                     canShare: true,
                 }
             });

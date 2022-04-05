@@ -66,6 +66,8 @@ app.use('/organization', require('./organizations/organization.controller'));
 
 app.use('/permission', require('./permissions/permission.controller'));
 
+app.use('/link', require('./links/link.controller'));
+
 // The error handler must be before any other error middleware and after all controllers
 // TODO - uncomment before deploying
 // app.use(Sentry.Handlers.errorHandler());
