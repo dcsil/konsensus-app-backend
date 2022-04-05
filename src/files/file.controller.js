@@ -28,6 +28,7 @@ function upload(req, res, next) {
         try {
             const file = files.file[0];
             const userId = req.user.id;
+            console.log(file)
 
             const data = await filesService.upload(file, userId);
             return res.status(200).send(data);
