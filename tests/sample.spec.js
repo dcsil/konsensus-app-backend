@@ -142,9 +142,7 @@ describe('Main test suite', () => {
 
     const file = await fileService.createNewFileInDb(params);
     expect(file).toBeTruthy();
-    fileId = file.id;
     console.log('file :>> ', file);
-    console.log('file.id :>> ', file.id);
     
     let response = await request(app)
       .get('/file/' + fileId)
