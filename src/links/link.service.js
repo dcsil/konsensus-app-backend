@@ -1,6 +1,6 @@
 const db = require('../_helpers/db');
-// const validatePermissions = require('../helpers/validate-permissions');
 const permissionService = require('../permissions/permission.service');
+const aws = require('../_helpers/aws');
 
 module.exports = {
     share,
@@ -34,5 +34,13 @@ async function getByShareToken(shareToken) {
             shareToken: shareToken,
         },
     });
-    return link;
+
+    const urlParams = {
+        Bucket: process.env.S3_BUCKET,
+        Key: link.dataValues.fileId,
+        Expires: 60 * 10,       // 10 minutes
+    };
+    const url = await aws.getSignedUrl(urlParams);
+
+    return {link: link.dataValues, url: url};
 }

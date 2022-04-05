@@ -4,7 +4,6 @@ const Joi = require('joi');
 const validateRequest = require('../_middleware/validate-request');
 const authorize = require('../_middleware/authorize')
 const linkService = require('./link.service');
-// const { Organizations } = require('aws-sdk');
 
 // routes
 router.post('/share', authorize(), shareSchema, share);
