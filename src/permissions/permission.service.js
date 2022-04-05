@@ -3,15 +3,18 @@ const db = require('../_helpers/db');
 module.exports = {
     createOrUpdate,
     getByIds,
-    validatePermissions
+    getPermission,
 };
 
 async function createOrUpdate(fileId, userId, updateFields, currentUser) {
     // save user
     try {
-        validatePermissions(fileId, currentUser);
+        const sharingPermission = await getPermission(fileId, currentUser.id);
+        if (!sharingPermission || !sharingPermission.canShare || !sharingPermission.isAdmin) {
+            throw Error('User has insufficient permissions.');
+        }
         
-        const permission = await db.Permission.findOne({
+        const newPermission = await db.Permission.findOne({
             where: {
                 fileId: fileId,
                 userId: userId,
@@ -24,8 +27,8 @@ async function createOrUpdate(fileId, userId, updateFields, currentUser) {
             userId: userId
         };
 
-        if (permission) {
-            await permission.update(params);
+        if (newPermission) {
+            await newPermission.update(params);
             return "Permission updated.";
         } else {
             await db.Permission.create(params);
@@ -48,15 +51,13 @@ async function getByIds(fileId, userId) {
 }
 
 // helpers
-async function validatePermissions(fileId, currentUser) {
+async function getPermission(fileId, userId) {
     const permission = await db.Permission.findOne({
         where: {
             fileId: fileId,
-            userId: currentUser.id,
+            userId: userId,
         },
     });
 
-    if (!permission || !permission.canShare || !permission.isAdmin) {
-        throw Error('User has insufficient permissions.');
-    }
+    return permission;
 }

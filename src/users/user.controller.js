@@ -30,7 +30,10 @@ function authenticateSchema(req, res, next) {
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(user => res.json(user))
-        .catch(next);
+        .catch(err => {
+            console.log('auth err :>> ', err);
+            next();}
+            );
 }
 
 function registerSchema(req, res, next) {
@@ -95,15 +98,9 @@ function setProfilePicture(req, res, next) {
 
         try {
             const file = files.file[0];
-            const buffer = fs.readFileSync(file.path);
-            /**
-             * Import 'file-type' ES-Module in CommonJS Node.js module
-            */
-            const { fileTypeFromBuffer } = await (eval('import("file-type")'));
-            const type = await fileTypeFromBuffer(buffer);
             const userId = req.user.id;
 
-            const data = await userService.setProfilePicture(buffer, type, userId);
+            const data = await userService.setProfilePicture(file, userId);
             return res.status(200).send(data);
         } catch (err) {
             console.log(err);
