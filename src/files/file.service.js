@@ -43,12 +43,12 @@ async function reupload(file, fileId, userId) {
         throw Error('User has insufficient permissions to edit/reupload file.');
     }
 
-    let type = await aws.uploadToS3(file, fileId).type;
+    let result = await aws.uploadToS3(file, fileId);
 
     fileModel = {
         id: fileId,
         name: file.originalFilename,
-        type: type.mime,
+        type: result.type.mime,
         lastUpdater: userId,
     };
 

@@ -31,9 +31,8 @@ function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(user => res.json(user))
         .catch(err => {
-            console.log('auth err :>> ', err);
-            next();}
-            );
+            next(err);}
+        );
 }
 
 function registerSchema(req, res, next) {
@@ -84,8 +83,8 @@ function updateSchema(req, res, next) {
 
 function update(req, res, next) {
     userService.update(req.params.id, req.body)
-        .then(user => res.json(user))
-        .catch(next);
+        .then(user => res.status(200).json(user))
+        .catch(() => {console.log(err)});
 }
 
 function setProfilePicture(req, res, next) {

@@ -52,7 +52,10 @@ async function create(params) {
 }
 
 async function update(id, params) {
-    const user = await getUser(id);
+    console.log('id :>> ', id);
+    let user = await getUser(id);
+    console.log('params :>> ', params);
+    console.log('user :>> ', user);
 
     // validate
     const emailChanged = params.email && user.email !== params.email;
@@ -66,10 +69,9 @@ async function update(id, params) {
     }
 
     // copy params to user and save
-    Object.assign(user, params);
-    await user.save();
-
-    return omitHash(user.get());
+    await db.User.update(params, { where: { id: id }});
+    user = await getUser(id);
+    return omitHash(user);
 }
 
 async function _delete(id) {
