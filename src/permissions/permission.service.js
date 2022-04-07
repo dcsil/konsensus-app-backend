@@ -1,9 +1,12 @@
 const db = require('../_helpers/db');
+const userService = require('../users/user.service');
 
 module.exports = {
     createOrUpdate,
+    updateByEmail,
     getByIds,
     getPermission,
+    getUsersWithFile,
 };
 
 async function createOrUpdate(fileId, userId, updateFields, currentUser) {
@@ -41,6 +44,17 @@ async function createOrUpdate(fileId, userId, updateFields, currentUser) {
     }
 }
 
+async function updateByEmail(fileId, updateFields, currentUser) {
+    const user = await db.User.findOne({
+        where: {
+            email: updateFields.email,
+        },
+    });
+
+    const result = await createOrUpdate(fileId, user.id, updateFields, currentUser);
+    return result;
+}
+
 async function getByIds(fileId, userId) {
     return await db.Permission.findOne({
         where: {
@@ -48,6 +62,23 @@ async function getByIds(fileId, userId) {
             userId: userId,
         },
     });
+}
+
+async function getUsersWithFile(fileId) {
+    const permissions = await db.Permission.findAll({
+        where: {
+            fileId: fileId,
+        },
+        raw: true,
+    });
+    
+    const result = await Promise.all( permissions.map(async permission => {
+        const user = await db.User.findByPk(permission.userId);
+        const publicUser = userService.getPublicUser(user.dataValues);
+        return {...permission, ...publicUser};
+    }));
+    
+    return result;
 }
 
 // helpers
