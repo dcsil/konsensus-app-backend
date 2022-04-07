@@ -10,9 +10,9 @@ module.exports = {
     getAll,
     getById,
     create,
+    setProfilePicture,
     update,
     delete: _delete,
-    setProfilePicture,
 };
 
 async function authenticate({ email, password }) {
@@ -52,7 +52,6 @@ async function create(params) {
 }
 
 async function update(id, params) {
-    console.log('id :>> ', id);
     let user = await getUser(id);
     console.log('params :>> ', params);
     console.log('user :>> ', user);

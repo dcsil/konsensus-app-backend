@@ -13,7 +13,7 @@ router.post('/register', registerSchema, register);
 router.get('/all', authorize(), getAll);
 router.get('/current', authorize(), getCurrent);
 router.get('/:id', authorize(), getById);
-router.put('/picture', authorize(), setProfilePicture);
+router.put('/image', authorize(), setProfilePicture);
 router.put('/:id', authorize(), updateSchema, update);
 router.delete('/:id', authorize(), _delete);
 
@@ -92,6 +92,7 @@ function setProfilePicture(req, res, next) {
     form.parse(req, async (error, fields, files) => {
 
         if (error) {
+            console.log('error 95 :>> ', error);
             return res.status(500).send(error);
         };
 
