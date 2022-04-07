@@ -85,19 +85,19 @@ function accessById(req, res, next) {
 }
 
 function getOwnedFiles(req, res, next) {
-    filesService.getOwnedFiles(req.user)
+    filesService.getFilesByIds(req.user.ownedFiles)
         .then(files => res.json(files))
         .catch(next);
 }
 
 function getStarredFiles(req, res, next) {
-    filesService.getStarredFiles(req.user)
+    filesService.getFilesByIds(req.user.starredFiles)
         .then(files => res.json(files))
         .catch(next);
 }
 
 function getRecentFiles(req, res, next) {
-    filesService.getRecentFiles(req.user)
+    filesService.getFilesByIds(req.user.recentFiles)
         .then(files => res.json(files))
         .catch(next);
 }

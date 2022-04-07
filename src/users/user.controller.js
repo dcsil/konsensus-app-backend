@@ -5,7 +5,6 @@ const validateRequest = require('../_middleware/validate-request');
 const authorize = require('../_middleware/authorize')
 const userService = require('./user.service');
 const multiparty = require('multiparty');
-const fs = require('fs');
 
 // routes
 router.post('/authenticate', authenticateSchema, authenticate);
@@ -92,7 +91,6 @@ function setProfilePicture(req, res, next) {
     form.parse(req, async (error, fields, files) => {
 
         if (error) {
-            console.log('error 95 :>> ', error);
             return res.status(500).send(error);
         };
 

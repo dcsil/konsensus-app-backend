@@ -4,7 +4,8 @@ const fs = require('fs');
 module.exports = {
     uploadToS3,
     getSignedUrl,
-    getObject
+    getObject,
+    hasObject
 };
 
 // configure the keys for accessing AWS
@@ -45,4 +46,14 @@ async function getSignedUrl(params) {
 async function getObject(params) {
     const data = await s3.getObject(params).promise();
     return data;
+}
+
+async function hasObject(params) {
+    try {
+        await s3.headObject(params).promise();
+        return true;
+    }
+    catch(err) {
+        return false;
+    }
 }

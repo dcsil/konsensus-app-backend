@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const { Op } = require("sequelize");
 const aws = require('../_helpers/aws');
 const permissionService = require('../permissions/permission.service');
+const userService = require('../users/user.service');
 
 module.exports = {
     upload,
@@ -11,11 +12,9 @@ module.exports = {
     getAll,
     getById,
     accessById,
-    getOwnedFiles,
-    getStarredFiles,
-    getRecentFiles,
     star,
-    createNewFileInDb
+    createNewFileInDb,
+    getFilesByIds
 };
 
 async function upload(file, userId) {
@@ -145,42 +144,6 @@ async function accessById(user, id) {
   }
 }
 
-async function getOwnedFiles(user) {
-  const fileIds = user.ownedFiles;
-  const files = await db.File.findAll({
-    where: {
-      id: {
-        [Op.in]: fileIds,
-      },
-    },
-  });
-  return files;
-}
-
-async function getRecentFiles(user) {
-  const fileIds = user.recentFiles;
-  const files = await db.File.findAll({
-    where: {
-      id: {
-        [Op.in]: fileIds,
-      },
-    },
-  });
-  return files;
-}
-
-async function getStarredFiles(user) {
-  const fileIds = user.starredFiles;
-  const files = await db.File.findAll({
-    where: {
-      id: {
-        [Op.in]: fileIds,
-      },
-    },
-  });
-  return files;
-}
-
 // helpers
 async function getFile(id) {
   const file = await db.File.findByPk(id);
@@ -209,4 +172,30 @@ async function createNewFileInDb(fileModel) {
         }
     );
     return file
+}
+
+async function getFilesByIds(ids) {
+  const files = await db.File.findAll({
+    where: { id: { [Op.in]: ids, }, }, raw: true,
+  });
+
+  const result = await Promise.all(files.map(async file => {
+    const permissions = await db.Permission.findAll({
+      where: {
+        fileId: file.id
+      },
+      raw: true,
+    });
+
+    const collaboratorIds = permissions.map(permission => permission.userId);
+    let collaborators = await db.User.findAll({
+      where: { id: { [Op.in]: collaboratorIds, },}, raw: true,
+    });
+    collaborators = collaborators.map(collaborator => userService.getPublicUser(collaborator));
+
+    return {
+      ...file, collaborators: collaborators
+    }
+  }));
+  return result;
 }

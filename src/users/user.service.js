@@ -13,6 +13,7 @@ module.exports = {
     setProfilePicture,
     update,
     delete: _delete,
+    getPublicUser
 };
 
 async function authenticate({ email, password }) {
@@ -98,25 +99,23 @@ async function getUser(id) {
 }
 
 async function getProfilePicture(id) {
-    const user = await db.User.findByPk(id);
-    if (!user.image) {
-        return;
-    }
     const key = `user-profile/${id}`;
 
-    const urlParams = {
+    const params = {
         Bucket: process.env.S3_BUCKET,
         Key: key,
-        Expires: 60 * 60 * 24 * 7,       // 1 week (max time)
     };
 
-    const url = await aws.getSignedUrl(urlParams);
+    const hasObject = await aws.hasObject(params);
+    if (!hasObject) {
+        return null;
+    }
 
+    const url = await aws.getSignedUrl({...params, Expires: 60 * 60 * 24 * 7 });  // max 1 week
     await db.User.findByPk(id).then(async user => { 
         await user.update({
             image: url
         })
-       
     });
     return url;
 }
@@ -124,4 +123,9 @@ async function getProfilePicture(id) {
 function omitHash(user) {
     const { hash, ...userWithoutHash } = user;
     return userWithoutHash;
+}
+
+function getPublicUser(user) {
+    const { hash, ownedFiles, starredFiles, recentFiles, email, ...publicUser } = user;
+    return publicUser;
 }
