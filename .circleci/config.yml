@@ -12,12 +12,16 @@ jobs:
         mysql_database:
           type: string
           default: konsensus-app-backend
+        environment:
+          type: string
+          default: test
     docker:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
+          ENVIRONMENT: << parameters.environment >>
     steps:
       - checkout
       - node/install:

@@ -1,3 +1,5 @@
+
+require('dotenv').config();
 const AWS = require('aws-sdk');
 const fs = require('fs');
 
@@ -39,8 +41,14 @@ async function uploadToS3(file, key) {
 }
 
 async function getSignedUrl(params) {
-    const url = await s3.getSignedUrlPromise('getObject', params);
-    return url;
+    try {
+        const url = await s3.getSignedUrlPromise('getObject', params);
+        return url;
+    }
+    catch (err) {
+        // console.log(err);
+        return "";
+    }
 }
 
 async function getObject(params) {
@@ -54,6 +62,7 @@ async function hasObject(params) {
         return true;
     }
     catch(err) {
+        // console.log('err :>> ', err);
         return false;
     }
 }

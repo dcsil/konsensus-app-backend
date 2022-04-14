@@ -33,7 +33,6 @@ async function getAll() {
 }
 
 async function getById(id) {
-    console.log('getting current user: id :>> ', id);
     return await getUser(id);
 }
 
@@ -54,8 +53,6 @@ async function create(params) {
 
 async function update(id, params) {
     let user = await getUser(id);
-    console.log('params :>> ', params);
-    console.log('user :>> ', user);
 
     // validate
     const emailChanged = params.email && user.email !== params.email;
@@ -87,10 +84,12 @@ async function setProfilePicture(file, userId) {
     const url = await getProfilePicture(userId);
     return url;
 }
-// helper functions
 
+// helper functions
 async function getUser(id) {
-    await getProfilePicture(id);
+    if (process.env.ENVIRONMENT != 'test') {
+        await getProfilePicture(id);
+    }
     const user = await db.User.findByPk(id);
 
     if (!user) throw 'User not found';
@@ -101,23 +100,29 @@ async function getUser(id) {
 async function getProfilePicture(id) {
     const key = `user-profile/${id}`;
 
-    const params = {
-        Bucket: process.env.S3_BUCKET,
-        Key: key,
-    };
-
-    const hasObject = await aws.hasObject(params);
-    if (!hasObject) {
-        return null;
+    try {
+        const params = {
+            Bucket: process.env.S3_BUCKET ? process.env.S3_BUCKET : '',
+            Key: key,
+        };
+    
+        const hasObject = await aws.hasObject(params);
+        if (!hasObject) {
+            return null;
+        }
+    
+        const url = await aws.getSignedUrl({...params, Expires: 60 * 60 * 24 * 7 });  // max 1 week
+        await db.User.findByPk(id).then(async user => { 
+            await user.update({
+                image: url
+            })
+        });
+        return url;
     }
-
-    const url = await aws.getSignedUrl({...params, Expires: 60 * 60 * 24 * 7 });  // max 1 week
-    await db.User.findByPk(id).then(async user => { 
-        await user.update({
-            image: url
-        })
-    });
-    return url;
+    catch (err) {
+        console.log('Error in userService.getProfilePicture: ', err);
+        return "";
+    }
 }
 
 function omitHash(user) {
@@ -126,6 +131,6 @@ function omitHash(user) {
 }
 
 function getPublicUser(user) {
-    const { hash, ownedFiles, starredFiles, recentFiles, email, ...publicUser } = user;
+    const { hash, ownedFiles, starredFiles, recentFiles, ...publicUser } = user;
     return publicUser;
 }

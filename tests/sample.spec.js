@@ -68,11 +68,14 @@ describe('Main test suite', () => {
         password: '123456'
       });
     expect(response.statusCode).toBe(200);
+    console.log('login response.body :>> ', response.body);
+    console.log('response.statusCode :>> ', response.statusCode);
     auth1 += response.body.token;
     userId1 = response.body.id;
   });
 
   it('Get all organizations', async () => {
+    console.log('auth1 :>> ', auth1);
     const response = await request(app)
       .get('/organization')
       .set('Authorization', auth1);
@@ -110,7 +113,8 @@ describe('Main test suite', () => {
       });
     expect(response.statusCode).toBe(200);
     auth2 += response.body.token;
-    console.log('auth2 :>> ', auth2);
+    userId2 = response.body.id;
+    // console.log('auth2 :>> ', auth2);
   });
 
   it('Get all users', async () => {
@@ -118,7 +122,7 @@ describe('Main test suite', () => {
       .get('/user/all')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBeGreaterThan(1);
   });
 
   it('Get user by id', async () => {
@@ -143,7 +147,7 @@ describe('Main test suite', () => {
 
     const file = await fileService.createNewFileInDb(params);
     expect(file).toBeTruthy();
-    console.log('file :>> ', file);
+    // console.log('file :>> ', file);
     
     let response = await request(app)
       .get('/file/' + fileId)
@@ -162,7 +166,7 @@ describe('Main test suite', () => {
       .get('/file/owned')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
   it('Getting recent files', async () => {
@@ -170,14 +174,15 @@ describe('Main test suite', () => {
       .get('/file/recent')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
   it('Adding a collaborator', async () => {
     const response = await request(app)
-      .put('/permission/' + fileId + '/' + userId2)
+      .put('/permission/' + fileId)
       .set('Authorization', auth1)
       .send({
+        email: "julianisnotcool@gmail.com",
         canView: true,
         canEdit: true,
       });
@@ -226,6 +231,34 @@ describe('Main test suite', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(0);
   });
+
+  it('Update a user', async () => {
+    const response = await request(app)
+      .put('/user/' + userId2)
+      .set('Authorization', auth2)
+      .send({
+        email: 'julianisalsocool@gmail.com',
+      });
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('Share a file', async () => {
+    let response = await request(app)
+      .post('/link/share')
+      .set('Authorization', auth1)
+      .send({
+        email: 'anotheremail@gmail.com',
+        fileId: fileId,
+      });
+    expect(response.statusCode).toBe(200);
+    const shareToken = response.body.shareToken;
+
+    response = await request(app)
+      .get('/link/' + shareToken);
+    
+    expect(response.statusCode).toBe(200);
+  });
+
 });
 
 afterAll(() => {
