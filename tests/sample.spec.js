@@ -182,7 +182,7 @@ describe('Main test suite', () => {
       .put('/permission/' + fileId)
       .set('Authorization', auth1)
       .send({
-        email: "windsoriscool@gmail.com",
+        email: "julianisnotcool@gmail.com",
         canView: true,
         canEdit: true,
       });
