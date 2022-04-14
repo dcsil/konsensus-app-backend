@@ -90,7 +90,8 @@ async function setProfilePicture(file, userId) {
 // helper functions
 
 async function getUser(id) {
-    if (!process.env.test) {
+    console.log('process.env :>> ', process.env);
+    if (process.env.ENVIRONMENT != 'test') {
         console.log('not a test env, getting prof pic');
         await getProfilePicture(id);
     }
