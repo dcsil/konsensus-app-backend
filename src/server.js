@@ -21,6 +21,14 @@ const corsOptions = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
+
+app.use((req,res,next)=>{
+  res.setHeader('Acces-Control-Allow-Origin','*');
+  res.setHeader('Acces-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
+  res.setHeader('Acces-Contorl-Allow-Methods','Content-Type','Authorization');
+  next(); 
+})
+
 app.options('*', cors()) // include before other routes
 
 Sentry.init({
@@ -70,7 +78,7 @@ app.use('/link', require('./links/link.controller'));
 
 // The error handler must be before any other error middleware and after all controllers
 // TODO - uncomment before deploying
-// app.use(Sentry.Handlers.errorHandler());
+app.use(Sentry.Handlers.errorHandler());
 
 // global error handler
 app.use(errorHandler);
