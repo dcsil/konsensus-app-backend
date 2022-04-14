@@ -111,7 +111,7 @@ describe('Main test suite', () => {
       });
     expect(response.statusCode).toBe(200);
     auth2 += response.body.token;
-    console.log('auth2 :>> ', auth2);
+    // console.log('auth2 :>> ', auth2);
   });
 
   it('Get all users', async () => {
@@ -144,7 +144,7 @@ describe('Main test suite', () => {
 
     const file = await fileService.createNewFileInDb(params);
     expect(file).toBeTruthy();
-    console.log('file :>> ', file);
+    // console.log('file :>> ', file);
     
     let response = await request(app)
       .get('/file/' + fileId)
@@ -176,9 +176,10 @@ describe('Main test suite', () => {
 
   it('Adding a collaborator', async () => {
     const response = await request(app)
-      .put('/permission/' + fileId + '/' + userId2)
+      .put('/permission/' + fileId)
       .set('Authorization', auth1)
       .send({
+        email: "windsoriscool@gmail.com",
         canView: true,
         canEdit: true,
       });

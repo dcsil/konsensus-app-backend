@@ -7,7 +7,7 @@ const permissionService = require('./permission.service');
 // const { Organizations } = require('aws-sdk');
 
 // routes
-router.put('/:fileId/:userId', authorize(), updateSchema, createOrUpdate);
+// router.put('/:fileId/:userId', authorize(), updateSchema, createOrUpdate);
 router.put('/:fileId', authorize(), updateByEmailSchema, updateByEmail);
 router.get('/:fileId/:userId', authorize(), getByIds)
 router.get('/:fileId', authorize(), getUsersWithFile);
