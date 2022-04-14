@@ -12,15 +12,24 @@ jobs:
         mysql_database:
           type: string
           default: konsensus-app-backend
+        s3_bucket:
+          type: string
+          default: konsensus
+        aws_access_key_id:
+          type: string
+          default: abc
+        aws_secret_access_key:
+          type: string
+          default: def
     docker:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
-          S3_BUCKET: konsensus
-          AWS_ACCESS_KEY_ID: abc
-          AWS_SECRET_ACCESS_KEY: def
+          S3_BUCKET: << parameters.s3_bucket >>
+          AWS_ACCESS_KEY_ID: << parameters.aws_access_key_id >>
+          AWS_SECRET_ACCESS_KEY: << parameters.aws_secret_access_key >>
     steps:
       - checkout
       - node/install:
