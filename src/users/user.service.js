@@ -101,23 +101,29 @@ async function getUser(id) {
 async function getProfilePicture(id) {
     const key = `user-profile/${id}`;
 
-    const params = {
-        Bucket: process.env.S3_BUCKET,
-        Key: key,
-    };
-
-    const hasObject = await aws.hasObject(params);
-    if (!hasObject) {
-        return null;
+    try {
+        const params = {
+            Bucket: process.env.S3_BUCKET ? process.env.S3_BUCKET : '',
+            Key: key,
+        };
+    
+        const hasObject = await aws.hasObject(params);
+        if (!hasObject) {
+            return null;
+        }
+    
+        const url = await aws.getSignedUrl({...params, Expires: 60 * 60 * 24 * 7 });  // max 1 week
+        await db.User.findByPk(id).then(async user => { 
+            await user.update({
+                image: url
+            })
+        });
+        return url;
     }
-
-    const url = await aws.getSignedUrl({...params, Expires: 60 * 60 * 24 * 7 });  // max 1 week
-    await db.User.findByPk(id).then(async user => { 
-        await user.update({
-            image: url
-        })
-    });
-    return url;
+    catch (err) {
+        console.log('error in userService.getProfilePicture:>> ', err);
+        return "";
+    }
 }
 
 function omitHash(user) {
