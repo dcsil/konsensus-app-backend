@@ -22,14 +22,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-app.use((req,res,next)=>{
-  res.setHeader('Acces-Control-Allow-Origin','*');
-  res.setHeader('Acces-Control-Allow-Methods','GET,POST,PUT,PATCH,DELETE');
-  res.setHeader('Acces-Contorl-Allow-Methods','Content-Type','Authorization');
-  next(); 
-})
+app.use((req, res, next) => {
+  res.setHeader('Acces-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Acces-Control-Allow-Methods',
+    'GET,POST,PUT,PATCH,DELETE'
+  );
+  res.setHeader(
+    'Acces-Contorl-Allow-Methods',
+    'Content-Type',
+    'Authorization'
+  );
+  next();
+});
 
-app.options('*', cors()) // include before other routes
+app.options(
+  '*',
+  cors({
+    origin: true,
+    optionsSuccessStatus: 200,
+    credentials: true,
+  })
+); // include before other routes
 
 Sentry.init({
   dsn:
@@ -70,9 +84,15 @@ app.use('/user', require('./users/user.controller'));
 
 app.use('/file', require('./files/file.controller'));
 
-app.use('/organization', require('./organizations/organization.controller'));
+app.use(
+  '/organization',
+  require('./organizations/organization.controller')
+);
 
-app.use('/permission', require('./permissions/permission.controller'));
+app.use(
+  '/permission',
+  require('./permissions/permission.controller')
+);
 
 app.use('/link', require('./links/link.controller'));
 
