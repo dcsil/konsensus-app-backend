@@ -6,7 +6,7 @@ module.exports = {
     updateByEmail,
     getByIds,
     getPermission,
-    getUsersWithFile,
+    // getUsersWithFile,
 };
 
 async function createOrUpdate(fileId, userId, updateFields, currentUser) {
