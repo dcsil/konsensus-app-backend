@@ -18,6 +18,9 @@ jobs:
         environment:
           MYSQL_ROOT_PASSWORD: << parameters.mysql_root_password >>
           MYSQL_DATABASE: << parameters.mysql_database >>
+          S3_BUCKET: konsensus
+          AWS_ACCESS_KEY_ID: abc
+          AWS_SECRET_ACCESS_KEY: def
     steps:
       - checkout
       - node/install:
