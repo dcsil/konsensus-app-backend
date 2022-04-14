@@ -33,7 +33,6 @@ async function getAll() {
 }
 
 async function getById(id) {
-    console.log('getting current user: id :>> ', id);
     return await getUser(id);
 }
 
@@ -54,8 +53,6 @@ async function create(params) {
 
 async function update(id, params) {
     let user = await getUser(id);
-    console.log('params :>> ', params);
-    console.log('user :>> ', user);
 
     // validate
     const emailChanged = params.email && user.email !== params.email;
@@ -87,12 +84,10 @@ async function setProfilePicture(file, userId) {
     const url = await getProfilePicture(userId);
     return url;
 }
-// helper functions
 
+// helper functions
 async function getUser(id) {
-    console.log('process.env :>> ', process.env);
     if (process.env.ENVIRONMENT != 'test') {
-        console.log('not a test env, getting prof pic');
         await getProfilePicture(id);
     }
     const user = await db.User.findByPk(id);
@@ -125,7 +120,7 @@ async function getProfilePicture(id) {
         return url;
     }
     catch (err) {
-        console.log('error in userService.getProfilePicture:>> ', err);
+        console.log('Error in userService.getProfilePicture: ', err);
         return "";
     }
 }
