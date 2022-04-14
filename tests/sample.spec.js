@@ -67,8 +67,9 @@ describe('Main test suite', () => {
         email: 'windsoriscool@gmail.com',
         password: '123456'
       });
-    console.log('login response.body :>> ', response.body);
     expect(response.statusCode).toBe(200);
+    console.log('login response.body :>> ', response.body);
+    console.log('response.statusCode :>> ', response.statusCode);
     auth1 += response.body.token;
     userId1 = response.body.id;
   });
@@ -119,7 +120,7 @@ describe('Main test suite', () => {
       .get('/user/all')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBeGreaterThan(1);
   });
 
   it('Get user by id', async () => {
