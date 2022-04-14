@@ -35,6 +35,10 @@ async function getByShareToken(shareToken) {
         },
     });
 
+    if (process.env.ENVIRONMENT == 'test')  {
+        return link;
+    }
+
     const urlParams = {
         Bucket: process.env.S3_BUCKET,
         Key: link.dataValues.fileId,
