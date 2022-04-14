@@ -3,7 +3,7 @@ const db = require('../_helpers/db');
 
 module.exports = {
     createOrUpdate,
-    updateByEmail,
+    // updateByEmail,
     getByIds,
     getPermission,
     // getUsersWithFile,
@@ -44,16 +44,16 @@ async function createOrUpdate(fileId, userId, updateFields, currentUser) {
     }
 }
 
-async function updateByEmail(fileId, updateFields, currentUser) {
-    const user = await db.User.findOne({
-        where: {
-            email: updateFields.email,
-        },
-    });
+// async function updateByEmail(fileId, updateFields, currentUser) {
+//     const user = await db.User.findOne({
+//         where: {
+//             email: updateFields.email,
+//         },
+//     });
 
-    const result = await createOrUpdate(fileId, user.id, updateFields, currentUser);
-    return result;
-}
+//     const result = await createOrUpdate(fileId, user.id, updateFields, currentUser);
+//     return result;
+// }
 
 async function getByIds(fileId, userId) {
     return await db.Permission.findOne({

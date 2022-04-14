@@ -75,6 +75,7 @@ describe('Main test suite', () => {
   });
 
   it('Get all organizations', async () => {
+    console.log('auth1 :>> ', auth1);
     const response = await request(app)
       .get('/organization')
       .set('Authorization', auth1);
@@ -112,6 +113,7 @@ describe('Main test suite', () => {
       });
     expect(response.statusCode).toBe(200);
     auth2 += response.body.token;
+    userId2 = response.body.id;
     // console.log('auth2 :>> ', auth2);
   });
 
@@ -164,7 +166,7 @@ describe('Main test suite', () => {
       .get('/file/owned')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
   it('Getting recent files', async () => {
@@ -172,7 +174,7 @@ describe('Main test suite', () => {
       .get('/file/recent')
       .set('Authorization', auth1);
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
+    expect(response.body.length).toBeGreaterThan(0);
   });
 
   it('Adding a collaborator', async () => {
