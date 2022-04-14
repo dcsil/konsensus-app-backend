@@ -90,7 +90,9 @@ async function setProfilePicture(file, userId) {
 // helper functions
 
 async function getUser(id) {
-    await getProfilePicture(id);
+    if (!process.env.test) {
+        await getProfilePicture(id);
+    }
     const user = await db.User.findByPk(id);
 
     if (!user) throw 'User not found';
