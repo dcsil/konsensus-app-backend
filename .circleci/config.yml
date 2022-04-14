@@ -21,9 +21,9 @@ jobs:
         aws_secret_access_key:
           type: string
           default: def
-        is_test:
-          type: boolean
-          default: true
+        environment:
+          type: string
+          default: test
     docker:
       - image: 'cimg/base:stable'
       - image: cimg/mysql:8.0
@@ -33,7 +33,7 @@ jobs:
           S3_BUCKET: << parameters.s3_bucket >>
           AWS_ACCESS_KEY_ID: << parameters.aws_access_key_id >>
           AWS_SECRET_ACCESS_KEY: << parameters.aws_secret_access_key >>
-          TEST: << parameters.is_test >>
+          ENVIRONMENT: << parameters.environment >>
     steps:
       - checkout
       - node/install:
