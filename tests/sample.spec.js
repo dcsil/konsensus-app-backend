@@ -57,7 +57,6 @@ describe('Main test suite', () => {
         email: 'windsoriscool@gmail.com',
         password: '123456',
         organizationId: organizationId});
-    console.log('response :>> ', response);
     expect(response.statusCode).toBe(200);
   });
 
@@ -68,6 +67,7 @@ describe('Main test suite', () => {
         email: 'windsoriscool@gmail.com',
         password: '123456'
       });
+    console.log('response :>> ', response);
     expect(response.statusCode).toBe(200);
     auth1 += response.body.token;
     userId1 = response.body.id;
