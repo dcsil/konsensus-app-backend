@@ -126,6 +126,6 @@ function omitHash(user) {
 }
 
 function getPublicUser(user) {
-    const { hash, ownedFiles, starredFiles, recentFiles, email, ...publicUser } = user;
+    const { hash, ownedFiles, starredFiles, recentFiles, ...publicUser } = user;
     return publicUser;
 }
