@@ -231,6 +231,34 @@ describe('Main test suite', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(0);
   });
+
+  it('Update a user', async () => {
+    const response = await request(app)
+      .put('/user/' + userId2)
+      .set('Authorization', auth2)
+      .send({
+        email: 'julianisalsocool@gmail.com',
+      });
+    expect(response.statusCode).toBe(200);
+  });
+
+  it('Share a file', async () => {
+    let response = await request(app)
+      .post('/link/share')
+      .set('Authorization', auth1)
+      .send({
+        email: 'anotheremail@gmail.com',
+        fileId: fileId,
+      });
+    expect(response.statusCode).toBe(200);
+    const shareToken = response.body.shareToken;
+
+    response = await request(app)
+      .post('/link/' + shareToken);
+    
+    expect(response.statusCode).toBe(200);
+  });
+
 });
 
 afterAll(() => {
