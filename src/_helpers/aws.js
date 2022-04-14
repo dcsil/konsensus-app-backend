@@ -46,7 +46,7 @@ async function getSignedUrl(params) {
         return url;
     }
     catch (err) {
-        console.log(err);
+        // console.log(err);
         return "";
     }
 }
@@ -62,7 +62,7 @@ async function hasObject(params) {
         return true;
     }
     catch(err) {
-        console.log('err :>> ', err);
+        // console.log('err :>> ', err);
         return false;
     }
 }
