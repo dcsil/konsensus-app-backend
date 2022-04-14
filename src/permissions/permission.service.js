@@ -1,5 +1,5 @@
 const db = require('../_helpers/db');
-const userService = require('../users/user.service');
+// const userService = require('../users/user.service');
 
 module.exports = {
     createOrUpdate,
@@ -64,22 +64,22 @@ async function getByIds(fileId, userId) {
     });
 }
 
-async function getUsersWithFile(fileId) {
-    const permissions = await db.Permission.findAll({
-        where: {
-            fileId: fileId,
-        },
-        raw: true,
-    });
+// async function getUsersWithFile(fileId) {
+//     const permissions = await db.Permission.findAll({
+//         where: {
+//             fileId: fileId,
+//         },
+//         raw: true,
+//     });
     
-    const result = await Promise.all( permissions.map(async permission => {
-        const user = await db.User.findByPk(permission.userId);
-        const publicUser = userService.getPublicUser(user.dataValues);
-        return {...permission, ...publicUser};
-    }));
+//     const result = await Promise.all( permissions.map(async permission => {
+//         const user = await db.User.findByPk(permission.userId);
+//         const publicUser = userService.getPublicUser(user.dataValues);
+//         return {...permission, ...publicUser};
+//     }));
     
-    return result;
-}
+//     return result;
+// }
 
 // helpers
 async function getPermission(fileId, userId) {
