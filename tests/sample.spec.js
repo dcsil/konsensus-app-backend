@@ -254,7 +254,7 @@ describe('Main test suite', () => {
     const shareToken = response.body.shareToken;
 
     response = await request(app)
-      .post('/link/' + shareToken);
+      .get('/link/' + shareToken);
     
     expect(response.statusCode).toBe(200);
   });
