@@ -91,6 +91,7 @@ async function setProfilePicture(file, userId) {
 
 async function getUser(id) {
     if (!process.env.test) {
+        console.log('not a test env, getting prof pic');
         await getProfilePicture(id);
     }
     const user = await db.User.findByPk(id);
