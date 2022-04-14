@@ -30,6 +30,7 @@ function authenticate(req, res, next) {
     userService.authenticate(req.body)
         .then(user => res.json(user))
         .catch(err => {
+            console.log('err :>> ', err);
             next(err);}
         );
 }
