@@ -4,7 +4,7 @@ const aws = require('../_helpers/aws');
 module.exports = {
     create,
     getAll,
-    setPicture
+    // setPicture
 };
 
 async function create(params) {
