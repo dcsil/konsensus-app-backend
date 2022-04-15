@@ -11,7 +11,7 @@ const app = express();
 const corsOptions = {
   origin: [
     'http://localhost:3000',
-    'https://konsensus-client.herokuapp.com/',
+    'https://konsensus-client.herokuapp.com',
   ],
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -22,28 +22,28 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors(corsOptions));
 
-app.use((req, res, next) => {
-  res.setHeader('Acces-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Acces-Control-Allow-Methods',
-    'GET,POST,PUT,PATCH,DELETE'
-  );
-  res.setHeader(
-    'Acces-Contorl-Allow-Methods',
-    'Content-Type',
-    'Authorization'
-  );
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Acces-Control-Allow-Origin', '*');
+//   res.setHeader(
+//     'Acces-Control-Allow-Methods',
+//     'GET,POST,PUT,PATCH,DELETE'
+//   );
+//   res.setHeader(
+//     'Acces-Contorl-Allow-Methods',
+//     'Content-Type',
+//     'Authorization'
+//   );
+//   next();
+// });
 
-app.options(
-  '*',
-  cors({
-    origin: true,
-    optionsSuccessStatus: 200,
-    credentials: true,
-  })
-); // include before other routes
+// app.options(
+//   '*',
+//   cors({
+//     origin: true,
+//     optionsSuccessStatus: 200,
+//     credentials: true,
+//   })
+// ); // include before other routes
 
 Sentry.init({
   dsn:
